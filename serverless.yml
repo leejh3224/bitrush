@@ -1,0 +1,41 @@
+service: bitrush
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  profile: gompro
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  region: ap-northeast-2
+  vpc:
+    securityGroupIds:
+      - sg-0e1a0cc7929566b12
+    subnetIds:
+      - subnet-0aa6bb2f3eff54014
+      - subnet-02aeb3691bd0f3ce0
+  environment:
+    UPBIT_OPEN_API_ACCESS_KEY: ${ssm:/Prod/Bitrush/UpbitApiAccessKey~true}
+    UPBIT_OPEN_API_SECRET_KEY: ${ssm:/Prod/Bitrush/UpbitApiSecretKey~true}
+    UPBIT_OPEN_API_SERVER_URL: ${ssm:/Prod/Bitrush/ApiURL}
+    BITRUSH_BOT_ACCESS_TOKEN: ${ssm:/Prod/Bitrush/BitrushBotAccessToken~true}
+    BITRUSH_BOT_CHAT_ID: ${ssm:/Prod/Bitrush/BitrushBotChatID~true}
+    BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString~true}
+
+functions:
+  trader:
+    image:
+      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
+    events:
+      - schedule:
+          rate: rate(10 minutes)
+          enabled: true
+  scanner:
+    image: 
+      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
+      command:
+        - scanner.main
+    events:
+      - schedule:
+          rate: cron(10 15 * * ? *) # 24:15
+          enabled: true
