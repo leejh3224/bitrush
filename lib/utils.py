@@ -14,16 +14,6 @@ def find(list, func):
     ]
 
 
-def enable_http_logging():
-    http.client.HTTPConnection.debuglevel = 1
-
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-    requests_log = logging.getLogger("urllib3")
-    requests_log.setLevel(logging.DEBUG)
-    requests_log.propagate = True
-
-
 def missing_days(days):
     """API에서 받아온 데이터에 구멍이 있을 경우 디비와 대조해서 빠진 날짜를 계산"""
     date_set = set(days[0] + timedelta(x) for x in range((days[-1] - days[0]).days))

@@ -5,8 +5,6 @@ from lib.models.ohlcv import Ohlcv
 from datetime import datetime, timedelta
 from loguru import logger
 from talib import abstract
-from lib.telegram import send_message
-import json
 from lib.utils import get_live_feed
 
 
@@ -39,9 +37,9 @@ def golden_cross(api, broker, params):
     feed["cross_up"] = (feed["mas"] >= feed["mal"]) & (prev_mas <= prev_mal)
     feed["cross_down"] = (feed["mas"] <= feed["mal"]) & (prev_mas >= prev_mal)
 
-    today_ohlcv = feed.iloc[-1]
-    cross_up = today_ohlcv["cross_up"]
-    cross_down = today_ohlcv["cross_down"]
+    current_ohlcv = feed.iloc[-1]
+    cross_up = current_ohlcv["cross_up"]
+    cross_down = current_ohlcv["cross_down"]
 
     cash = broker.get_cash()
     trade_amount = int(cash * ratio)
@@ -50,8 +48,13 @@ def golden_cross(api, broker, params):
     if size > 0 and cross_down:
         order = api.sell(ticker, amount=size)
         if order:
-            send_message(f"SELL order = {json.dumps(order, indent=2)}")
-            logger.info("SELL order = {}", json.dumps(order, indent=2))
+            broker.notify_order(
+                order_id=order["uuid"],
+                type="sell",
+                ticker=ticker,
+                price=current_ohlcv["close"],
+                size=size,
+            )
         return
 
     if size == 0 and cross_up:
@@ -60,5 +63,10 @@ def golden_cross(api, broker, params):
             return
         order = api.buy(ticker, amount=trade_amount)
         if order:
-            send_message(f"BUY order = {json.dumps(order, indent=2)}")
-            logger.info("BUY order = {}", json.dumps(order, indent=2))
+            broker.notify_order(
+                order_id=order["uuid"],
+                type="buy",
+                ticker=ticker,
+                price=current_ohlcv["close"],
+                size=size,
+            )

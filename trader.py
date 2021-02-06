@@ -8,10 +8,10 @@ from lib.upbit import Upbit
 from decimal import *
 from lib.strategies.golden_cross import golden_cross
 from lib.ticker import Ticker
-
+from lib.sqs import order_queue
 
 api = Upbit()
-broker = Broker(api)
+broker = Broker(api, order_queue)
 
 
 def main(event, context):

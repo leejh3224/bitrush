@@ -1,3 +1,4 @@
+from lib.broker import Broker
 from lib.db import session
 from sqlalchemy import func
 from lib.models.ohlcv import Ohlcv
@@ -5,11 +6,10 @@ from datetime import datetime, timedelta
 from loguru import logger
 from lib.utils import get_live_feed
 from decimal import *
-from lib.telegram import send_message
-import json
+from lib.upbit import Upbit
 
 
-def volatility_breakout(api, broker, params):
+def volatility_breakout(api: Upbit, broker: Broker, params):
 
     # params
     ticker = params["ticker"]
@@ -42,8 +42,13 @@ def volatility_breakout(api, broker, params):
     if size > 0 and when_to_sell < now <= when_to_sell + timedelta(minutes=30):
         order = api.sell(ticker, amount=size)
         if order:
-            send_message(f"SELL order = {json.dumps(order, indent=2)}")
-            logger.info("SELL order = {}", json.dumps(order, indent=2))
+            broker.notify_order(
+                order_id=order["uuid"],
+                type="sell",
+                ticker=ticker,
+                price=current_ohlcv["close"],
+                size=size,
+            )
         return
 
     if size == 0 and current_ohlcv["close"] > current_ohlcv["open"] + (range * k):
@@ -52,5 +57,10 @@ def volatility_breakout(api, broker, params):
             return
         order = api.buy(ticker, amount=trade_amount)
         if order:
-            send_message(f"BUY order = {json.dumps(order, indent=2)}")
-            logger.info("BUY order = {}", json.dumps(order, indent=2))
+            broker.notify_order(
+                order_id=order["uuid"],
+                type="buy",
+                ticker=ticker,
+                price=current_ohlcv["close"],
+                size=size,
+            )

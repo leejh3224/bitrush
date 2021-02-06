@@ -4,7 +4,7 @@ frameworkVersion: '2'
 
 provider:
   name: aws
-  profile: gompro
+  profile: ${self:provider.environment.AWS_PROFILE}
   runtime: python3.8
   lambdaHashingVersion: 20201221
   region: ap-northeast-2
@@ -15,15 +15,18 @@ provider:
       - subnet-0aa6bb2f3eff54014
       - subnet-02aeb3691bd0f3ce0
   environment:
+    AWS_PROFILE: gompro
     UPBIT_OPEN_API_ACCESS_KEY: ${ssm:/Prod/Bitrush/UpbitApiAccessKey~true}
     UPBIT_OPEN_API_SECRET_KEY: ${ssm:/Prod/Bitrush/UpbitApiSecretKey~true}
     UPBIT_OPEN_API_SERVER_URL: ${ssm:/Prod/Bitrush/ApiURL}
     BITRUSH_BOT_ACCESS_TOKEN: ${ssm:/Prod/Bitrush/BitrushBotAccessToken~true}
     BITRUSH_BOT_CHAT_ID: ${ssm:/Prod/Bitrush/BitrushBotChatID~true}
     BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString~true}
+    BITRUSH_ORDER_QUEUE: BitrushOrderQueue
 
 functions:
   trader:
+    description: 매매
     image:
       uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
     events:
@@ -31,6 +34,7 @@ functions:
           rate: rate(10 minutes)
           enabled: true
   scanner:
+    description: 일봉 데이터 디비 저장
     image: 
       uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
       command:
@@ -39,3 +43,11 @@ functions:
       - schedule:
           rate: cron(10 15 * * ? *) # 24:15
           enabled: true
+  recorder:
+    description: 매수/매도 정보 디비 저장
+    image:
+      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
+      command:
+        - recorder.main
+    events:
+      - sqs: arn:aws:sqs:ap-northeast-2:678967017970:${self:provider.environment.BITRUSH_ORDER_QUEUE}
