@@ -36,8 +36,7 @@ functions:
     description: 일봉 데이터 디비 저장
     image: 
       uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
-      command:
-        - scanner.main
+      command: scanner.main
     events:
       - schedule:
           rate: cron(10 15 * * ? *) # 24:15
@@ -46,7 +45,6 @@ functions:
     description: 매수/매도 정보 디비 저장
     image:
       uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
-      command:
-        - recorder.main
+      command: recorder.main
     events:
       - sqs: arn:aws:sqs:ap-northeast-2:678967017970:${self:provider.environment.BITRUSH_ORDER_QUEUE}
