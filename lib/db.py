@@ -1,0 +1,14 @@
+import sqlalchemy as db
+from sqlalchemy.orm import sessionmaker
+import os
+
+connection_string = os.getenv("BITRUSH_CONNECTION_STRING")
+
+engine = db.create_engine(
+    connection_string,
+    pool_size=20,
+    convert_unicode=True,
+    echo=True,
+)
+Session = sessionmaker(bind=engine)
+session = Session()
