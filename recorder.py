@@ -8,14 +8,14 @@ from lib.upbit import Upbit
 from lib.models.trade import Trade, TradeType
 from lib.db import session
 from datetime import datetime
-from lib.sqs import sqs, order_queue_url, order_queue
+from lib.sqs import sqs, order_queue_url
 
 api = Upbit()
 
 
 def main(event, context):
     for record in event["Records"]:
-        attributes = json.loads(record["attributes"])
+        attributes = record["attributes"]
         body = json.loads(record["body"])
         uuid = body["order_id"]
         order = api.get_order(uuid)
@@ -35,21 +35,22 @@ def main(event, context):
                         if trade["side"] == "bid"
                         else TradeType.sell,
                         date=datetime.strptime(
-                            order["created_at"], "%Y-%m-%dT%H:%M:%S+09:00"
+                            trade["created_at"], "%Y-%m-%dT%H:%M:%S+09:00"
                         ),
-                        ticker=order["market"].replace("KRW-", ""),
-                        price=order["price"],
-                        volume=order["volume"],
-                        amount=order["funds"],
-                        raw_data=order,
+                        ticker=trade["market"].replace("KRW-", ""),
+                        price=trade["price"],
+                        volume=trade["volume"],
+                        amount=trade["funds"],
+                        raw_data=trade,
                     )
                     trades.append(_trade)
-                session.add_all(trades)
-                session.commit()
 
-                order_queue.delete_message(
-                    QueueUrl=order_queue_url, ReceiptHandle=record["receiptHandle"]
-                )
+                try:
+                    session.add_all(trades)
+                    session.commit()
+                except:
+                    session.rollback()
+                    raise
             else:
                 retry_count = attributes["ApproximateReceiveCount"]
 
@@ -57,11 +58,7 @@ def main(event, context):
                     f"order_id = {uuid}, retry = {retry_count}, trade not completed"
                 )
 
-                if retry_count > 3:
-                    order_queue.delete_message(
-                        QueueUrl=order_queue_url, ReceiptHandle=record["receiptHandle"]
-                    )
-                else:
+                if retry_count <= 3:
                     message = sqs.Message(order_queue_url, record["receiptHandle"])
                     message.change_visibility(VisibilityTimeout=60 * 10)
 
