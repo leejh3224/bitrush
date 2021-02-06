@@ -54,8 +54,8 @@ class Broker:
             cls=DecimalEncoder,
             indent=2,
         )
-        # send_message(msg)
-        # logger.info(msg)
+        send_message(msg)
+        logger.info(msg)
         self.order_queue.send_message(MessageBody=json.dumps({"order_id": order_id}))
 
 
