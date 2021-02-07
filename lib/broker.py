@@ -2,7 +2,6 @@ from loguru import logger
 from lib.utils import find
 from decimal import *
 from datetime import datetime
-from lib.telegram_bot import send_message
 import json
 
 
@@ -54,7 +53,6 @@ class Broker:
             cls=DecimalEncoder,
             indent=2,
         )
-        send_message(msg)
         logger.info(msg)
         self.order_queue.send_message(MessageBody=json.dumps({"order_id": order_id}))
 
