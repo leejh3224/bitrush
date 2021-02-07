@@ -4,9 +4,7 @@ from backtest.indicators.ConnorsRSI import ConnorsRSI
 
 
 class CRSI(bt.Strategy):
-    params = (
-        ('ratio', 0.2),
-    )
+    params = (("ratio", 0.2),)
 
     def __init__(self) -> None:
         super().__init__()
@@ -24,9 +22,7 @@ class CRSI(bt.Strategy):
 
 
 class SRSI(bt.Strategy):
-    params = (
-        ('ratio', 0.2),
-    )
+    params = (("ratio", 0.2),)
 
     def __init__(self) -> None:
         super().__init__()

@@ -1,4 +1,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from backtest.strategies.RSI import CRSI, SRSI
 from backtest.strategies.VollatilityBreakout import VolatilityBreakout
 from backtest.strategies.Turtle import Turtle
@@ -31,13 +35,13 @@ strategies = {
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(CRSI)
+cerebro.addstrategy(SRSI)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
-cerebro.broker.setcash(100_0000)
+cerebro.broker.setcash(1000_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="BTC")
+data = get_ohlcv(ticker="XRP")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 
