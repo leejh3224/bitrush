@@ -52,25 +52,13 @@ curl -XPOST "http://localhost:8080/2015-03-31/functions/function/invocations" -d
 
 ## Deploy
 
-[aws-cli](https://github.com/aws/aws-cli)를 설치한 후 기본 설정을 완료합니다.
-
-이후 AWS 아키텍쳐를 아래와 같이 설정해줍니다.
+AWS 아키텍쳐는 아래와 같이 설정해줍니다.
 
 ![아키텍쳐](./aws-architecture.png)
 
-배포 명령어)
+`main` 브랜치에 푸시하면 배포가 진행됩니다. (`.github/workflows/deploy.yaml` 참조)
 
-```bash
-ecr 레포지토리 생성 후 package.json의 config.ecr_image를 변경
-
-npm run ecr:login # --profile 부분을 변경한다. ex) --profile default
-
-npm run ecr:push
-
-npm install -g serverless # serverless framework 생성
-
-npm run deploy
-```
+이를 위해서는 ECR 레포지토리 구성이 필요하고, 필요한 깃헙 레포지토리 `secrets`를 추가해줘야합니다.
 
 ## Caveats
 

@@ -35,7 +35,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: bitrush
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           DOCKER_BUILDKIT: 1
         run: |
           docker build \
