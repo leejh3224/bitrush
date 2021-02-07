@@ -18,6 +18,7 @@ def main(event, context):
         attributes = record["attributes"]
         body = json.loads(record["body"])
         uuid = body["order_id"]
+        strategy = body["strategy"]
         order = api.get_order(uuid)
 
         logger.info(f"order_id = {uuid}")
@@ -31,6 +32,7 @@ def main(event, context):
                 for trade in order["trades"]:
                     _trade = Trade(
                         id=f'upbit:{trade["uuid"]}',
+                        strategy=strategy,
                         type=TradeType.buy
                         if trade["side"] == "bid"
                         else TradeType.sell,

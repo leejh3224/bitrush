@@ -12,6 +12,7 @@ class Trade(Base):
     __tablename__ = "trade"
 
     id = Column(String(60), primary_key=True)
+    strategy = Column(String(100))
     type = Column(Enum(TradeType))
     date = Column(DateTime)
     ticker = Column(String(100))

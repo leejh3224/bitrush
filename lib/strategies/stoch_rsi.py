@@ -50,6 +50,7 @@ def stoch_rsi(api: Upbit, broker: Broker, params):
                 ticker=ticker,
                 price=current_ohlcv["close"],
                 size=size,
+                strategy="stoch_rsi",
             )
         return
 
@@ -65,4 +66,5 @@ def stoch_rsi(api: Upbit, broker: Broker, params):
                 ticker=ticker,
                 price=current_ohlcv["close"],
                 size=size,
+                strategy="stoch_rsi",
             )

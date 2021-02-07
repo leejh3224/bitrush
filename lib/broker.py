@@ -30,7 +30,7 @@ class Broker:
         asset = self.__get_asset(ticker)
         return Decimal(asset.get("avg_buy_price", 0)) if asset else 0
 
-    def notify_order(self, order_id, type, ticker, price, size):
+    def notify_order(self, order_id, type, ticker, price, size, strategy):
         """주문 체결 알림
 
         Args:
@@ -39,6 +39,7 @@ class Broker:
             ticker (str): 주문 종목
             price (Decimal): 매수/매도시 진입 가격 (실제가 x)
             size (Decimal): 주문 수량
+            strategy (str): 전략
         """
         date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         msg = json.dumps(
@@ -54,7 +55,9 @@ class Broker:
             indent=2,
         )
         logger.info(msg)
-        self.order_queue.send_message(MessageBody=json.dumps({"order_id": order_id}))
+        self.order_queue.send_message(
+            MessageBody=json.dumps({"order_id": order_id, "strategy": strategy})
+        )
 
 
 class DecimalEncoder(json.JSONEncoder):

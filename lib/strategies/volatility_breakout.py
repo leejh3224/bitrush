@@ -48,6 +48,7 @@ def volatility_breakout(api: Upbit, broker: Broker, params):
                 ticker=ticker,
                 price=current_ohlcv["close"],
                 size=size,
+                strategy="volatility_breakout",
             )
         return
 
@@ -63,4 +64,5 @@ def volatility_breakout(api: Upbit, broker: Broker, params):
                 ticker=ticker,
                 price=current_ohlcv["close"],
                 size=size,
+                strategy="volatility_breakout",
             )

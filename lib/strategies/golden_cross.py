@@ -1,4 +1,6 @@
 from decimal import *
+from lib.upbit import Upbit
+from lib.broker import Broker
 from lib.db import session
 from sqlalchemy import func
 from lib.models.ohlcv import Ohlcv
@@ -8,7 +10,7 @@ from talib import abstract
 from lib.utils import get_live_feed
 
 
-def golden_cross(api, broker, params):
+def golden_cross(api: Upbit, broker: Broker, params):
 
     # params
     ticker = params["ticker"]
@@ -54,6 +56,7 @@ def golden_cross(api, broker, params):
                 ticker=ticker,
                 price=current_ohlcv["close"],
                 size=size,
+                strategy="golden_cross",
             )
         return
 
@@ -69,4 +72,5 @@ def golden_cross(api, broker, params):
                 ticker=ticker,
                 price=current_ohlcv["close"],
                 size=size,
+                strategy="golden_cross",
             )
