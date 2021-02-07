@@ -19,3 +19,6 @@ test_*.py
 .git
 
 *.png
+
+# ci settings
+.github/
