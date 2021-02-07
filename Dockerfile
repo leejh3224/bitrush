@@ -27,6 +27,6 @@ COPY requirements.txt ${LAMBDA_TASK_ROOT}
 RUN pip3 install -r requirements.txt -t ${LAMBDA_TASK_ROOT}
 
 COPY lib ${LAMBDA_TASK_ROOT}/lib
-COPY *.py ${LAMBDA_TASK_ROOT}
+COPY *.py ${LAMBDA_TASK_ROOT}/
 
 CMD ["trader.main"]
