@@ -40,8 +40,8 @@ jobs:
         run: |
           docker build \
             --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 \
-            -t $ECR_REGISTRY/$ECR_REPOSITORY . --progress=plain
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:latest . --progress=plain
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Log out of Amazon ECR
         if: always()
