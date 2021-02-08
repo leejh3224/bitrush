@@ -23,7 +23,7 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
 
 RUN rm -R ta-lib ta-lib-0.4.0-src.tar.gz
 
-COPY requirements.txt ${LAMBDA_TASK_ROOT}
+COPY requirements.txt pyproject.toml ${LAMBDA_TASK_ROOT}/
 RUN pip3 install -r requirements.txt -t ${LAMBDA_TASK_ROOT}
 
 COPY lib ${LAMBDA_TASK_ROOT}/lib
