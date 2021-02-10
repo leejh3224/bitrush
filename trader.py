@@ -1,3 +1,4 @@
+from lib.strategies.rsi_bb import rsi_bb
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -48,6 +49,23 @@ def main(event, context):
         ratio=Decimal(0.2),
     )
     aroon(api, broker, aroon_params)
+
+    rsi_bb_params_list = [
+        dict(
+            ticker=Ticker.비트코인.value,
+            min_unit_krw=Decimal(5000),
+            ratio=Decimal(0.2),
+            period=14,
+        ),
+        dict(
+            ticker=Ticker.이더리움.value,
+            min_unit_krw=Decimal(5000),
+            ratio=Decimal(0.2),
+            period=14,
+        ),
+    ]
+    for rsi_bb_params in rsi_bb_params_list:
+        rsi_bb(api, broker, rsi_bb_params)
 
 
 if __name__ == "__main__":

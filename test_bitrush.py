@@ -1,4 +1,5 @@
 from decimal import *
+from lib.strategies.rsi_bb import rsi_bb
 from lib.ticker import Ticker
 from lib.strategies.golden_cross import golden_cross
 from lib.strategies.aroon import aroon
@@ -46,3 +47,13 @@ def test_aroon():
         ratio=Decimal(0.2),
     )
     aroon(api, broker, aroon_params)
+
+
+def test_rsi_bb():
+    rsi_bb_params = dict(
+        ticker=Ticker.비트코인.value,
+        min_unit_krw=Decimal(5000),
+        ratio=Decimal(0.2),
+        period=14,
+    )
+    rsi_bb(api, broker, rsi_bb_params)
