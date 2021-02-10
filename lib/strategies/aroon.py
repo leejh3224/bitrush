@@ -35,7 +35,7 @@ def aroon(api: Upbit, broker: Broker, params):
 
     aroon = abstract.AROONOSC(feed)
 
-    if size > 0 and aroon < 0:
+    if size > 0 and aroon[0] < 0:
         order = api.sell(ticker, amount=size)
         if order:
             broker.notify_order(
@@ -48,7 +48,7 @@ def aroon(api: Upbit, broker: Broker, params):
             )
         return
 
-    if size == 0 and aroon >= 70:
+    if size == 0 and aroon[0] >= 70:
         if trade_amount < min_unit_krw:
             logger.info("not enough cash")
             return
