@@ -3,31 +3,24 @@ import backtrader as bt
 
 class GoldenCross(bt.Strategy):
     params = (
-        ('fast', 10),
-        ('slow', 20),
-        ('ratio', 0.2),
-        ('min_trade', 5000),
+        ("fast", 10),
+        ("slow", 20),
+        ("ratio", 0.2),
+        ("min_trade", 5000),
     )
 
     def __init__(self) -> None:
         super().__init__()
 
         self.fastma = bt.indicators.SimpleMovingAverage(
-            self.data.close,
-            period=self.p.fast,
-            plotname='fast ma'
+            self.data.close, period=self.p.fast, plotname="fast ma"
         )
 
         self.slowma = bt.indicators.SimpleMovingAverage(
-            self.data.close,
-            period=self.p.slow,
-            plotname='slow ma'
+            self.data.close, period=self.p.slow, plotname="slow ma"
         )
 
-        self.crossover = bt.indicators.CrossOver(
-            self.fastma,
-            self.slowma
-        )
+        self.crossover = bt.indicators.CrossOver(self.fastma, self.slowma)
 
     def next(self):
         cash = self.broker.get_cash()

@@ -5,6 +5,7 @@ load_dotenv()
 from lib.strategies.volatility_breakout import volatility_breakout
 from lib.strategies.stoch_rsi import stoch_rsi
 from lib.strategies.golden_cross import golden_cross
+from lib.strategies.aroon import aroon
 from lib.broker import Broker
 from lib.upbit import Upbit
 from decimal import *
@@ -40,6 +41,13 @@ def main(event, context):
         period=14,
     )
     stoch_rsi(api, broker, srsi_params)
+
+    aroon_params = dict(
+        ticker=Ticker.비트코인.value,
+        min_unit_krw=Decimal(5000),
+        ratio=Decimal(0.2),
+    )
+    aroon(api, broker, aroon_params)
 
 
 if __name__ == "__main__":

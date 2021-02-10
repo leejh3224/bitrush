@@ -1,4 +1,7 @@
 from decimal import *
+from lib.ticker import Ticker
+from lib.strategies.golden_cross import golden_cross
+from lib.strategies.aroon import aroon
 from lib.broker import Broker
 from lib.upbit import Upbit
 import json
@@ -23,3 +26,23 @@ def test_notify_order():
         price=Decimal("41351000.00000000"),
         size=Decimal("0.00018350"),
     )
+
+
+def test_golden_cross():
+    gc_params = dict(
+        ticker=Ticker.이더리움.value,
+        short_period=10,
+        long_period=20,
+        min_unit_krw=Decimal(5000),
+        ratio=Decimal(0.2),
+    )
+    golden_cross(api, broker, gc_params)
+
+
+def test_aroon():
+    aroon_params = dict(
+        ticker=Ticker.비트코인.value,
+        min_unit_krw=Decimal(5000),
+        ratio=Decimal(0.2),
+    )
+    aroon(api, broker, aroon_params)

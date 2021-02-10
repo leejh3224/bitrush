@@ -7,23 +7,16 @@ from backtest.strategies.RSI import CRSI, SRSI
 from backtest.strategies.VollatilityBreakout import VolatilityBreakout
 from backtest.strategies.Turtle import Turtle
 from backtest.strategies.GoldenCross import GoldenCross
+from backtest.strategies.KVO import Kvo
+from backtest.strategies.Aroon import Aroon
 from backtest.commission import CommInfoFractional
 from backtest.strategies.BuyHold import BuyHold
 from backtest.data import get_ohlcv
-from lib.ticker import Ticker
 
 import backtrader as bt
 import backtrader.analyzers as btanalyzers
 import math
 import tableprint as tp
-
-# parser = argparse.ArgumentParser()
-# parser.add_argument('--ticker', help='which ticker to run', type=str)
-# parser.add_argument('--strategy', help='which strategy to run', type=str)
-# args = parser.parse_args()
-
-# if args.ticker not in [ticker.value for ticker in Ticker]:
-#     sys.exit('no such ticker')
 
 strategies = {
     "buy_hold": BuyHold,
@@ -32,16 +25,18 @@ strategies = {
     "volatility_breakout": VolatilityBreakout,
     "crsi": CRSI,  # ConnorsRSI
     "srsi": SRSI,  # StochRSI
+    "kvo": Kvo,
+    "aroon": Aroon,
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(SRSI)
+cerebro.addstrategy(Aroon)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
 cerebro.broker.setcash(1000_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="XRP")
+data = get_ohlcv(ticker="BTC")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 
