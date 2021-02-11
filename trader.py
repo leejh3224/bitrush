@@ -27,13 +27,28 @@ def main(event, context):
     )
     golden_cross(api, broker, gc_params)
 
-    vb_params = dict(
-        ticker=Ticker.비트코인.value,
-        min_unit_krw=Decimal(5000),
-        k=Decimal(0.5),
-        ratio=Decimal(0.2),
-    )
-    volatility_breakout(api, broker, vb_params)
+    vb_params_list = [
+        dict(
+            ticker=Ticker.비트코인.value,
+            min_unit_krw=Decimal(5000),
+            k=Decimal(0.5),
+            ratio=Decimal(0.2),
+        ),
+        dict(
+            ticker=Ticker.이더리움.value,
+            min_unit_krw=Decimal(5000),
+            k=Decimal(0.5),
+            ratio=Decimal(0.2),
+        ),
+        dict(
+            ticker=Ticker.리플.value,
+            min_unit_krw=Decimal(5000),
+            k=Decimal(0.5),
+            ratio=Decimal(0.2),
+        ),
+    ]
+    for vb_params in vb_params_list:
+        volatility_breakout(api, broker, vb_params)
 
     srsi_params = dict(
         ticker=Ticker.리플.value,
