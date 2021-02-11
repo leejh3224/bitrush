@@ -37,7 +37,7 @@ def volatility_breakout(api: Upbit, broker: Broker, params):
     current_ohlcv = feed.iloc[-1]
 
     now = datetime.now()
-    when_to_sell = datetime(now.year, now.month, now.day, 23, 30, 0)
+    when_to_sell = datetime(now.year, now.month, now.day, 6, 0, 0)
 
     if size > 0 and when_to_sell < now <= when_to_sell + timedelta(minutes=20):
         order = api.sell(ticker, amount=size)
