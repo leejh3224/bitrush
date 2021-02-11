@@ -44,10 +44,10 @@ class Broker:
         )
 
     def buy(self, ticker, amount=0):
-        self.api.buy(ticker, amount)
+        return self.api.buy(ticker, amount)
 
     def sell(self, ticker, amount=0):
-        self.api.sell(ticker, amount)
+        return self.api.sell(ticker, amount)
 
     def get_feed(self, ticker):
         """디비에 있는 어제까지의 데이터 + 현재 데이터"""
