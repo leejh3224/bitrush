@@ -81,7 +81,7 @@ class BaseStrategy:
         )
         (trade_type, volume) = result if result else (None, Decimal(0))
 
-        if trade_type == TradeType.sell and self.should_buy():
+        if (trade_type == None or trade_type == TradeType.sell) and self.should_buy():
             if buy_amount < min_unit_krw:
                 logger.info("not enough cash")
                 return
