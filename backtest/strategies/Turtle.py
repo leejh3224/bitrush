@@ -7,26 +7,21 @@ class Turtle(bt.Strategy):
     # S1: (10, 20)
     # S2: (20, 55)
     params = (
-        ('ratio', 0.2),
-        ('unit', 0.02),
-        ('low_period', 10),
-        ('high_period', 20),
-        ('fractional', False),
-        ('min_trade', 5000)
+        ("ratio", 0.2),
+        ("unit", 0.05),
+        ("low_period", 20),
+        ("high_period", 55),
+        ("fractional", False),
+        ("min_trade", 5000),
     )
 
     def __init__(self) -> None:
         super().__init__()
         self.dc = DonchianChannels(
-            self.data, low_period=self.p.low_period, high_period=self.p.high_period)
-        self.high_crossup = bt.indicators.CrossUp(
-            self.data.close,
-            self.dc.dch
+            self.data, low_period=self.p.low_period, high_period=self.p.high_period
         )
-        self.low_crossdown = bt.indicators.CrossDown(
-            self.data.close,
-            self.dc.dcl
-        )
+        self.high_crossup = bt.indicators.CrossUp(self.data.close, self.dc.dch)
+        self.low_crossdown = bt.indicators.CrossDown(self.data.close, self.dc.dcl)
         self.atr = bt.indicators.AverageTrueRange(self.data)
 
     def next(self):
