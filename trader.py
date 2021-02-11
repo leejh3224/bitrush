@@ -1,4 +1,3 @@
-from lib.strategies.rsi_bb import rsi_bb
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,14 +17,14 @@ broker = Broker(api, order_queue)
 
 
 def main(event, context):
-    gc_params = dict(
-        ticker=Ticker.이더리움.value,
-        short_period=10,
-        long_period=20,
-        min_unit_krw=Decimal(5000),
-        ratio=Decimal(0.2),
-    )
-    golden_cross(api, broker, gc_params)
+    # gc_params = dict(
+    #     ticker=Ticker.이더리움.value,
+    #     short_period=10,
+    #     long_period=20,
+    #     min_unit_krw=Decimal(5000),
+    #     ratio=Decimal(0.2),
+    # )
+    # golden_cross(api, broker, gc_params)
 
     vb_params_list = [
         dict(
@@ -34,18 +33,18 @@ def main(event, context):
             k=Decimal(0.5),
             ratio=Decimal(0.2),
         ),
-        dict(
-            ticker=Ticker.이더리움.value,
-            min_unit_krw=Decimal(5000),
-            k=Decimal(0.5),
-            ratio=Decimal(0.2),
-        ),
-        dict(
-            ticker=Ticker.리플.value,
-            min_unit_krw=Decimal(5000),
-            k=Decimal(0.5),
-            ratio=Decimal(0.2),
-        ),
+        # dict(
+        #     ticker=Ticker.이더리움.value,
+        #     min_unit_krw=Decimal(5000),
+        #     k=Decimal(0.5),
+        #     ratio=Decimal(0.2),
+        # ),
+        # dict(
+        #     ticker=Ticker.리플.value,
+        #     min_unit_krw=Decimal(5000),
+        #     k=Decimal(0.5),
+        #     ratio=Decimal(0.2),
+        # ),
     ]
     for vb_params in vb_params_list:
         volatility_breakout(api, broker, vb_params)
@@ -58,29 +57,29 @@ def main(event, context):
     )
     stoch_rsi(api, broker, srsi_params)
 
-    aroon_params = dict(
-        ticker=Ticker.비트코인.value,
-        min_unit_krw=Decimal(5000),
-        ratio=Decimal(0.2),
-    )
-    aroon(api, broker, aroon_params)
+    # aroon_params = dict(
+    #     ticker=Ticker.비트코인.value,
+    #     min_unit_krw=Decimal(5000),
+    #     ratio=Decimal(0.2),
+    # )
+    # aroon(api, broker, aroon_params)
 
-    rsi_bb_params_list = [
-        dict(
-            ticker=Ticker.비트코인.value,
-            min_unit_krw=Decimal(5000),
-            ratio=Decimal(0.2),
-            period=14,
-        ),
-        dict(
-            ticker=Ticker.이더리움.value,
-            min_unit_krw=Decimal(5000),
-            ratio=Decimal(0.2),
-            period=14,
-        ),
-    ]
-    for rsi_bb_params in rsi_bb_params_list:
-        rsi_bb(api, broker, rsi_bb_params)
+    # rsi_bb_params_list = [
+    #     dict(
+    #         ticker=Ticker.비트코인.value,
+    #         min_unit_krw=Decimal(5000),
+    #         ratio=Decimal(0.2),
+    #         period=14,
+    #     ),
+    #     dict(
+    #         ticker=Ticker.이더리움.value,
+    #         min_unit_krw=Decimal(5000),
+    #         ratio=Decimal(0.2),
+    #         period=14,
+    #     ),
+    # ]
+    # for rsi_bb_params in rsi_bb_params_list:
+    #     rsi_bb(api, broker, rsi_bb_params)
 
 
 if __name__ == "__main__":
