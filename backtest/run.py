@@ -38,7 +38,7 @@ cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
 cerebro.broker.setcash(1000_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="ETH")
+data = get_ohlcv(ticker="EOS")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 

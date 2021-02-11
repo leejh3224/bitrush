@@ -1,8 +1,11 @@
 from decimal import *
-from lib.strategies.rsi_bb import rsi_bb
+from lib.strategies.base_strategy import StrategyParams
+from lib.strategies.volatility_breakout import VolatilityBreakout
+from lib.strategies.stoch_rsi import StochRSI
+from lib.strategies.golden_cross import GoldenCross
+from lib.strategies.aroon import Aroon
+from lib.strategies.rsi_bb import RsiBB
 from lib.ticker import Ticker
-from lib.strategies.golden_cross import golden_cross
-from lib.strategies.aroon import aroon
 from lib.broker import Broker
 from lib.upbit import Upbit
 import json
@@ -29,31 +32,42 @@ def test_notify_order():
     )
 
 
-def test_golden_cross():
-    gc_params = dict(
-        ticker=Ticker.이더리움.value,
-        short_period=10,
-        long_period=20,
-        min_unit_krw=Decimal(5000),
-        ratio=Decimal(0.2),
+def test_volatility_breakout():
+    strategy = VolatilityBreakout(
+        broker,
+        StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2)),
     )
-    golden_cross(api, broker, gc_params)
+    strategy.should_buy()
+    strategy.should_sell()
+
+
+def test_stoch_rsi():
+    strategy = StochRSI(
+        broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+    )
+    strategy.should_buy()
+    strategy.should_sell()
+
+
+def test_golden_cross():
+    strategy = GoldenCross(
+        broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+    )
+    strategy.should_buy()
+    strategy.should_sell()
 
 
 def test_aroon():
-    aroon_params = dict(
-        ticker=Ticker.비트코인.value,
-        min_unit_krw=Decimal(5000),
-        ratio=Decimal(0.2),
+    strategy = Aroon(
+        broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
     )
-    aroon(api, broker, aroon_params)
+    strategy.should_buy()
+    strategy.should_sell()
 
 
 def test_rsi_bb():
-    rsi_bb_params = dict(
-        ticker=Ticker.비트코인.value,
-        min_unit_krw=Decimal(5000),
-        ratio=Decimal(0.2),
-        period=14,
+    strategy = RsiBB(
+        broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
     )
-    rsi_bb(api, broker, rsi_bb_params)
+    strategy.should_buy()
+    strategy.should_sell()

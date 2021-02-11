@@ -1,73 +1,32 @@
-from lib.broker import Broker
-from lib.db import session
-from sqlalchemy import func
-from lib.models.ohlcv import Ohlcv
-from datetime import datetime, timedelta
-from loguru import logger
-from lib.utils import get_live_feed
-from decimal import *
-from lib.upbit import Upbit
+from lib.strategies.base_strategy import BaseStrategy
 from talib import abstract, MA_Type
 
 
-def rsi_bb(api: Upbit, broker: Broker, params):
+class RsiBB(BaseStrategy):
+    name = "rsi_bollinger_bands"
 
-    # params
-    ticker = params["ticker"]
-    min_unit_krw = params["min_unit_krw"]
-    ratio = params["ratio"]
-    period = params["period"]
+    # settings
+    period = 14
 
-    (max_date,) = session.query(func.max(Ohlcv.date)).filter_by(ticker=ticker).first()
+    def __init__(self, broker, params) -> None:
+        super().__init__(broker, params)
+        ticker = self.params["ticker"]
 
-    yesterday = datetime.today() - timedelta(days=1)
+        feed = self.broker.get_feed(ticker)
 
-    # Scanner가 동작하지 않아서 오늘 결과가 저장되지 않을 경우 수행 x
-    if max_date.date() < yesterday.date():
-        logger.info("record is stale, max date = {}", max_date)
-        return
+        rsi = abstract.RSI(feed, period=self.period)
+        maxrsi = abstract.MAX(rsi, period=self.period)
+        minrsi = abstract.MIN(rsi, period=self.period)
+        srsi = (rsi - minrsi) / (maxrsi - minrsi)
 
-    feed = get_live_feed(api, ticker)
+        bb = abstract.BBANDS(feed, matype=MA_Type.T3, period=self.period)
+        bb_crossup = feed["close"] > bb["upperband"]
 
-    cash = broker.get_cash()
-    trade_amount = int(cash * ratio)
-    size = broker.get_balance(ticker)
+        self.current_srsi = srsi.iloc[-1]
+        self.current_bb_crossup = bb_crossup.iloc[-1]
 
-    current_ohlcv = feed.iloc[-1]
+    def should_buy(self) -> bool:
+        return self.current_srsi >= 0.8 and self.current_bb_crossup
 
-    rsi = abstract.RSI(feed, period=period)
-    maxrsi = abstract.MAX(rsi, period=period)
-    minrsi = abstract.MIN(rsi, period=period)
-    srsi = (rsi - minrsi) / (maxrsi - minrsi)
-    current_srsi = srsi.iloc[-1]
-
-    bb = abstract.BBANDS(feed, matype=MA_Type.T3, period=period)
-    bb_crossup = feed["close"] > bb["upperband"]
-
-    if size > 0 and current_srsi <= 0.3:
-        order = api.sell(ticker, amount=size)
-        if order:
-            broker.notify_order(
-                order_id=order["uuid"],
-                type="sell",
-                ticker=ticker,
-                price=current_ohlcv["close"],
-                size=size,
-                strategy="stoch_rsi",
-            )
-        return
-
-    if size == 0 and current_srsi >= 0.8 and bb_crossup[0]:
-        if trade_amount < min_unit_krw:
-            logger.info("not enough cash")
-            return
-        order = api.buy(ticker, amount=trade_amount)
-        if order:
-            broker.notify_order(
-                order_id=order["uuid"],
-                type="buy",
-                ticker=ticker,
-                price=current_ohlcv["close"],
-                size=size,
-                strategy="stoch_rsi",
-            )
+    def should_sell(self) -> bool:
+        return self.current_srsi <= 0.3

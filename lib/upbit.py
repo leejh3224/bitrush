@@ -8,6 +8,7 @@ from loguru import logger
 from ratelimit import limits, sleep_and_retry
 import requests
 import json
+from decimal import Decimal
 
 
 def get_hash(query_string):
@@ -92,7 +93,7 @@ class Upbit:
     @sleep_and_retry
     @limits(calls=upbit_ratelimit["exchange"]["order"]["per_minute"], period=60)
     @limits(calls=upbit_ratelimit["exchange"]["order"]["per_second"], period=1)
-    def buy(self, ticker, amount=0):
+    def buy(self, ticker, amount=Decimal(0)):
         """정해진 금액만큼 매수
 
         Args:
@@ -119,7 +120,7 @@ class Upbit:
     @sleep_and_retry
     @limits(calls=upbit_ratelimit["exchange"]["order"]["per_minute"], period=60)
     @limits(calls=upbit_ratelimit["exchange"]["order"]["per_second"], period=1)
-    def sell(self, ticker, amount=0):
+    def sell(self, ticker, amount=Decimal(0)):
         """정해진 양만큼 매도
 
         Args:

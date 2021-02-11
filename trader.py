@@ -2,12 +2,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from lib.strategies.volatility_breakout import volatility_breakout
-from lib.strategies.stoch_rsi import stoch_rsi
-from lib.strategies.golden_cross import golden_cross
-from lib.strategies.aroon import aroon
+from lib.strategies.volatility_breakout import VolatilityBreakout
+from lib.strategies.stoch_rsi import StochRSI
+from lib.strategies.golden_cross import GoldenCross
+from lib.strategies.aroon import Aroon
+from lib.strategies.rsi_bb import RsiBB
 from lib.broker import Broker
 from lib.upbit import Upbit
+from lib.strategies.base_strategy import StrategyParams
 from decimal import *
 from lib.ticker import Ticker
 from lib.sqs import order_queue
@@ -17,69 +19,31 @@ broker = Broker(api, order_queue)
 
 
 def main(event, context):
-    # gc_params = dict(
-    #     ticker=Ticker.이더리움.value,
-    #     short_period=10,
-    #     long_period=20,
-    #     min_unit_krw=Decimal(5000),
-    #     ratio=Decimal(0.2),
-    # )
-    # golden_cross(api, broker, gc_params)
+    GoldenCross(
+        broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))
+    ).trade()
 
-    vb_params_list = [
-        dict(
+    VolatilityBreakout(
+        broker,
+        StrategyParams(
             ticker=Ticker.비트코인.value,
-            min_unit_krw=Decimal(5000),
-            k=Decimal(0.5),
             ratio=Decimal(0.2),
         ),
-        # dict(
-        #     ticker=Ticker.이더리움.value,
-        #     min_unit_krw=Decimal(5000),
-        #     k=Decimal(0.5),
-        #     ratio=Decimal(0.2),
-        # ),
-        # dict(
-        #     ticker=Ticker.리플.value,
-        #     min_unit_krw=Decimal(5000),
-        #     k=Decimal(0.5),
-        #     ratio=Decimal(0.2),
-        # ),
-    ]
-    for vb_params in vb_params_list:
-        volatility_breakout(api, broker, vb_params)
+    ).trade()
 
-    srsi_params = dict(
-        ticker=Ticker.리플.value,
-        min_unit_krw=Decimal(5000),
-        ratio=Decimal(0.2),
-        period=14,
-    )
-    stoch_rsi(api, broker, srsi_params)
+    VolatilityBreakout(
+        broker,
+        StrategyParams(
+            ticker=Ticker.이더리움.value,
+            ratio=Decimal(0.2),
+        ),
+    ).trade()
 
-    # aroon_params = dict(
-    #     ticker=Ticker.비트코인.value,
-    #     min_unit_krw=Decimal(5000),
-    #     ratio=Decimal(0.2),
-    # )
-    # aroon(api, broker, aroon_params)
+    StochRSI(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))).trade()
 
-    # rsi_bb_params_list = [
-    #     dict(
-    #         ticker=Ticker.비트코인.value,
-    #         min_unit_krw=Decimal(5000),
-    #         ratio=Decimal(0.2),
-    #         period=14,
-    #     ),
-    #     dict(
-    #         ticker=Ticker.이더리움.value,
-    #         min_unit_krw=Decimal(5000),
-    #         ratio=Decimal(0.2),
-    #         period=14,
-    #     ),
-    # ]
-    # for rsi_bb_params in rsi_bb_params_list:
-    #     rsi_bb(api, broker, rsi_bb_params)
+    Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))).trade()
+
+    RsiBB(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))).trade()
 
 
 if __name__ == "__main__":
