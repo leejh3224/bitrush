@@ -21,6 +21,9 @@ broker = Broker(api, order_queue)
 def main(event, context):
     strategies: list[BaseStrategy] = [
         GoldenCross(
+            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+        ),
+        GoldenCross(
             broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))
         ),
         VolatilityBreakout(
@@ -37,9 +40,28 @@ def main(event, context):
                 ratio=Decimal(0.2),
             ),
         ),
+        VolatilityBreakout(
+            broker,
+            StrategyParams(
+                ticker=Ticker.이오스.value,
+                ratio=Decimal(0.05),
+            ),
+        ),
+        VolatilityBreakout(
+            broker,
+            StrategyParams(
+                ticker=Ticker.라이트코인.value,
+                ratio=Decimal(0.05),
+            ),
+        ),
         StochRSI(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
+        Aroon(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
+        Aroon(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.2))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
         RsiBB(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.2))),
     ]
 
     for strategy in strategies:

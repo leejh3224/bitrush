@@ -12,6 +12,7 @@ from backtest.strategies.Aroon import Aroon
 from backtest.strategies.RsiBollingerBands import RsiBollingerBands
 from backtest.commission import CommInfoFractional
 from backtest.strategies.BuyHold import BuyHold
+from backtest.strategies.Rsi2 import Rsi2
 from backtest.data import get_ohlcv
 
 import backtrader as bt
@@ -35,10 +36,10 @@ cerebro = bt.Cerebro()
 cerebro.addstrategy(RsiBollingerBands)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
-cerebro.broker.setcash(1000_0000)
+cerebro.broker.setcash(130_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="XRP")
+data = get_ohlcv(ticker="XRP")["2018-01-01":]
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 
