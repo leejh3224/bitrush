@@ -165,3 +165,29 @@ class Upbit:
 
         res = self.session.get(url, params=query, headers=self.__get_headers(payload))
         return res.json()
+
+    @sleep_and_retry
+    @limits(calls=upbit_ratelimit["exchange"]["order"]["per_minute"], period=60)
+    @limits(calls=upbit_ratelimit["exchange"]["order"]["per_second"], period=1)
+    def get_orders(self, ticker, state):
+        """주문 목록 정보 조회
+
+        Args:
+            ticker (str): 주문 심볼
+            state (str): 주문 상태
+                - wait (default) (체결 대기)
+                - done (매도 완료)
+                - cancel (매수 완료)
+        """
+        url = f"{self.base_url}/v1/orders"
+        query = {"market": f"KRW-{ticker}", "state": state}
+        query_string = urlencode(query).encode()
+
+        payload = {
+            **self.__get_auth(),
+            "query_hash": get_hash(query_string),
+            "query_hash_alg": "SHA512",
+        }
+
+        res = self.session.get(url, params=query, headers=self.__get_headers(payload))
+        return res.json()

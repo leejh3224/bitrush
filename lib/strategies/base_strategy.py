@@ -86,6 +86,8 @@ class BaseStrategy:
                 logger.info("not enough cash")
                 return
             order = self.broker.buy(ticker, amount=buy_amount)
+            logger.info(f"order = {order}")
+
             if order:
                 self.broker.notify_order(
                     order_id=order["uuid"],
@@ -95,6 +97,8 @@ class BaseStrategy:
 
         if trade_type == TradeType.buy and self.should_sell():
             order = self.broker.sell(ticker, amount=volume)
+            logger.info(f"order = {order}")
+
             if order:
                 self.broker.notify_order(
                     order_id=order["uuid"],

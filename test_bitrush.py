@@ -71,3 +71,8 @@ def test_rsi_bb():
     )
     strategy.should_buy()
     strategy.should_sell()
+
+
+def test_get_orders():
+    res = api.get_orders(ticker=Ticker.이더리움.value, state="cancel")
+    print(res)
