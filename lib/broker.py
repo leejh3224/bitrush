@@ -22,7 +22,7 @@ class LastTrade(NamedTuple):
     avg_price: Decimal
 
     def __str__(self) -> str:
-        return f"({self.trade_type.value}) total_volume={self.total_volume}, avg_price={self.avg_price}"
+        return f"({self.trade_type.value if self.trade_type else None}) total_volume={self.total_volume}, avg_price={self.avg_price}"
 
 
 class Broker:
