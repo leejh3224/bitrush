@@ -82,6 +82,8 @@ class BaseStrategy:
             )
             (trade_type, volume) = result if result else (None, Decimal(0))
 
+            logger.info(f"name = {name}, trade_type = {trade_type}, volume = {volume}")
+
             if (
                 trade_type == None or trade_type == TradeType.sell
             ) and self.should_buy():
