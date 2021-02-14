@@ -74,7 +74,7 @@ class BaseStrategy:
             trade_type = last_trade.trade_type
             total_volume = last_trade.total_volume
 
-            logger.info(f"name = {name}, last_trade = {last_trade}")
+            logger.info(f"name = {name}, ticker = {ticker}, last_trade = {last_trade}")
 
             if (
                 trade_type == None or trade_type == TradeType.sell
