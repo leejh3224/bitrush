@@ -96,7 +96,7 @@ class Broker:
             strategy (str): 전략
         """
         last_trade_date = (
-            session.query(func.max(func.date(Trade.date)))
+            session.query(func.max(Trade.date))
             .filter_by(ticker=ticker, strategy=strategy)
             .subquery()
         )
