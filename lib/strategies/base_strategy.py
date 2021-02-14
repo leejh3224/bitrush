@@ -70,19 +70,11 @@ class BaseStrategy:
             cash = self.broker.get_cash()
             buy_amount = int(cash * ratio)
 
-            last_trade_date = (
-                session.query(func.max(func.date(Trade.date)))
-                .filter_by(ticker=ticker, strategy=name)
-                .subquery()
-            )
-            result = (
-                session.query(Trade.type, func.sum(Trade.volume))
-                .filter(Trade.date >= last_trade_date, Trade.ticker == ticker)
-                .first()
-            )
-            (trade_type, volume) = result if result else (None, Decimal(0))
+            last_trade = self.broker.get_last_trade(ticker=ticker, strategy=name)
+            trade_type = last_trade.trade_type
+            total_volume = last_trade.total_volume
 
-            logger.info(f"name = {name}, trade_type = {trade_type}, volume = {volume}")
+            logger.info(f"name = {name}, last_trade = {last_trade}")
 
             if (
                 trade_type == None or trade_type == TradeType.sell
@@ -101,7 +93,7 @@ class BaseStrategy:
                 return
 
             if trade_type == TradeType.buy and self.should_sell():
-                order = self.broker.sell(ticker, amount=volume)
+                order = self.broker.sell(ticker, amount=total_volume)
                 logger.info(f"order = {order}")
 
                 if order:

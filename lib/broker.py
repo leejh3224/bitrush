@@ -1,3 +1,4 @@
+from typing import NamedTuple, Optional
 from lib.utils import find
 from decimal import *
 import json
@@ -5,6 +6,23 @@ from lib.models.ohlcv import Ohlcv
 import pandas as pd
 from datetime import datetime
 from lib.db import session
+from sqlalchemy import func
+from lib.models.trade import Trade, TradeType
+
+
+class LastTrade(NamedTuple):
+    """group of trades by ticker and strategy"""
+
+    trade_type: Optional[TradeType]
+
+    # 전체 보유량
+    total_volume: Decimal
+
+    # 평단가
+    avg_price: Decimal
+
+    def __str__(self) -> str:
+        return f"({self.trade_type.value}) total_volume={self.total_volume}, avg_price={self.avg_price}"
 
 
 class Broker:
@@ -69,6 +87,31 @@ class Broker:
             [vars(s) for s in ohlcvs], columns=["date", "open", "high", "low", "close"]
         )
         return feed
+
+    def get_last_trade(self, ticker: str, strategy: str) -> LastTrade:
+        """가장 마지막에 거래내역을 가져옴
+
+        Args:
+            ticker (str): 마켓 심볼
+            strategy (str): 전략
+        """
+        last_trade_date = (
+            session.query(func.max(func.date(Trade.date)))
+            .filter_by(ticker=ticker, strategy=strategy)
+            .subquery()
+        )
+        result = (
+            session.query(Trade.type, func.sum(Trade.volume), func.avg(Trade.price))
+            .filter(Trade.date >= last_trade_date, Trade.ticker == ticker)
+            .first()
+        )
+        return (
+            LastTrade(trade_type=result[0], total_volume=result[1], avg_price=result[2])
+            if result
+            else LastTrade(
+                trade_type=None, total_volume=Decimal(0), avg_price=Decimal(0)
+            )
+        )
 
 
 class DecimalEncoder(json.JSONEncoder):
