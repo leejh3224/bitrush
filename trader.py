@@ -37,6 +37,13 @@ def main(event, context):
         VolatilityBreakout(
             broker,
             StrategyParams(
+                ticker=Ticker.이더리움.value,
+                ratio=Decimal(0.2),
+            ),
+        ),
+        VolatilityBreakout(
+            broker,
+            StrategyParams(
                 ticker=Ticker.이오스.value,
                 ratio=Decimal(0.05),
             ),

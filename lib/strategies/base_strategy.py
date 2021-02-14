@@ -70,14 +70,14 @@ class BaseStrategy:
             cash = self.broker.get_cash()
             buy_amount = int(cash * ratio)
 
-            get_last_trade_date = (
-                session.query(func.max(Trade.date))
+            last_trade_date = (
+                session.query(func.max(func.date(Trade.date)))
                 .filter_by(ticker=ticker, strategy=name)
                 .subquery()
             )
             result = (
-                session.query(Trade.type, Trade.volume)
-                .filter_by(date=get_last_trade_date)
+                session.query(Trade.type, func.sum(Trade.volume))
+                .filter(Trade.date >= last_trade_date, Trade.ticker == ticker)
                 .first()
             )
             (trade_type, volume) = result if result else (None, Decimal(0))

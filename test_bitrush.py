@@ -83,6 +83,6 @@ def test_get_orders():
 def test_patch_datetime():
     strategy = VolatilityBreakout(
         broker,
-        StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.2)),
+        StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2)),
     )
     strategy.trade()
