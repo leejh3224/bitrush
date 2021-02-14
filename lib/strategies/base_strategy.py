@@ -59,49 +59,54 @@ class BaseStrategy:
         pass
 
     def trade(self) -> None:
-        ratio = self.params["ratio"]
-        name = self.name
-        ticker = self.params["ticker"]
-        min_unit_krw = self.params["min_unit_krw"]
+        try:
+            ratio = self.params["ratio"]
+            name = self.name
+            ticker = self.params["ticker"]
+            min_unit_krw = self.params["min_unit_krw"]
 
-        self.__check_feed_staleness()
+            self.__check_feed_staleness()
 
-        cash = self.broker.get_cash()
-        buy_amount = int(cash * ratio)
+            cash = self.broker.get_cash()
+            buy_amount = int(cash * ratio)
 
-        get_last_trade_date = (
-            session.query(func.max(Trade.date))
-            .filter_by(ticker=ticker, strategy=name)
-            .subquery()
-        )
-        result = (
-            session.query(Trade.type, Trade.volume)
-            .filter_by(date=get_last_trade_date)
-            .first()
-        )
-        (trade_type, volume) = result if result else (None, Decimal(0))
+            get_last_trade_date = (
+                session.query(func.max(Trade.date))
+                .filter_by(ticker=ticker, strategy=name)
+                .subquery()
+            )
+            result = (
+                session.query(Trade.type, Trade.volume)
+                .filter_by(date=get_last_trade_date)
+                .first()
+            )
+            (trade_type, volume) = result if result else (None, Decimal(0))
 
-        if (trade_type == None or trade_type == TradeType.sell) and self.should_buy():
-            if buy_amount < min_unit_krw:
-                logger.info("not enough cash")
+            if (
+                trade_type == None or trade_type == TradeType.sell
+            ) and self.should_buy():
+                if buy_amount < min_unit_krw:
+                    logger.info("not enough cash")
+                    return
+                order = self.broker.buy(ticker, amount=buy_amount)
+                logger.info(f"order = {order}")
+
+                if order:
+                    self.broker.notify_order(
+                        order_id=order["uuid"],
+                        strategy=name,
+                    )
                 return
-            order = self.broker.buy(ticker, amount=buy_amount)
-            logger.info(f"order = {order}")
 
-            if order:
-                self.broker.notify_order(
-                    order_id=order["uuid"],
-                    strategy=name,
-                )
-            return
+            if trade_type == TradeType.buy and self.should_sell():
+                order = self.broker.sell(ticker, amount=volume)
+                logger.info(f"order = {order}")
 
-        if trade_type == TradeType.buy and self.should_sell():
-            order = self.broker.sell(ticker, amount=volume)
-            logger.info(f"order = {order}")
-
-            if order:
-                self.broker.notify_order(
-                    order_id=order["uuid"],
-                    strategy=name,
-                )
-            return
+                if order:
+                    self.broker.notify_order(
+                        order_id=order["uuid"],
+                        strategy=name,
+                    )
+                return
+        except Exception as e:
+            logger.error(e)

@@ -10,16 +10,17 @@ from lib.broker import Broker
 from lib.upbit import Upbit
 import json
 from lib.sqs import order_queue
+from freezegun import freeze_time
 
 api = Upbit()
 broker = Broker(api, order_queue)
 
 
 def test_get_order():
-    sell_order = api.get_order("fbd50fdf-9f6c-4d11-98f7-554cca2dc946")
-    buy_order = api.get_order("714e432e-8ccb-4d90-bc31-d00644da47a6")
+    sell_order = api.get_order("e0771f6b-ddf9-4f20-af45-a1ca36a46e54")
+    # buy_order = api.get_order("714e432e-8ccb-4d90-bc31-d00644da47a6")
     print(json.dumps(sell_order, indent=2))
-    print(json.dumps(buy_order, indent=2))
+    # print(json.dumps(buy_order, indent=2))
 
 
 def test_notify_order():
@@ -74,5 +75,14 @@ def test_rsi_bb():
 
 
 def test_get_orders():
-    res = api.get_orders(ticker=Ticker.이더리움.value, state="cancel")
+    res = api.get_orders(ticker=Ticker.라이트코인.value, state="done")
     print(res)
+
+
+@freeze_time("2021-02-14 06:01:00")
+def test_patch_datetime():
+    strategy = VolatilityBreakout(
+        broker,
+        StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.2)),
+    )
+    strategy.trade()

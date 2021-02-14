@@ -20,6 +20,7 @@ broker = Broker(api, order_queue)
 
 def main(event, context):
     strategies: list[BaseStrategy] = [
+        StochRSI(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
         GoldenCross(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
         ),
@@ -30,13 +31,6 @@ def main(event, context):
             broker,
             StrategyParams(
                 ticker=Ticker.비트코인.value,
-                ratio=Decimal(0.2),
-            ),
-        ),
-        VolatilityBreakout(
-            broker,
-            StrategyParams(
-                ticker=Ticker.이더리움.value,
                 ratio=Decimal(0.2),
             ),
         ),
@@ -54,7 +48,6 @@ def main(event, context):
                 ratio=Decimal(0.05),
             ),
         ),
-        StochRSI(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
         Aroon(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.2))),
