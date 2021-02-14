@@ -17,7 +17,7 @@ broker = Broker(api, order_queue)
 
 
 def test_get_order():
-    sell_order = api.get_order("e0771f6b-ddf9-4f20-af45-a1ca36a46e54")
+    sell_order = api.get_order("06838560-c10e-448c-8ef4-eabd2ebbeac1")
     # buy_order = api.get_order("714e432e-8ccb-4d90-bc31-d00644da47a6")
     print(json.dumps(sell_order, indent=2))
     # print(json.dumps(buy_order, indent=2))
@@ -36,10 +36,10 @@ def test_notify_order():
 def test_volatility_breakout():
     strategy = VolatilityBreakout(
         broker,
-        StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2)),
+        StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2)),
     )
-    strategy.should_buy()
-    strategy.should_sell()
+    # strategy.should_buy()
+    print(strategy.should_sell())
 
 
 def test_stoch_rsi():
