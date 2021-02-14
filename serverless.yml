@@ -22,6 +22,7 @@ provider:
     BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString~true}
     BITRUSH_ORDER_QUEUE_NAME: ${ssm:/Prod/Bitrush/OrderQueue/Name}
     BITRUSH_ORDER_QUEUE_URL: ${ssm:/Prod/Bitrush/OrderQueue/URL}
+    SQL_LOGGING: False
 
 functions:
   trader:
