@@ -1,17 +1,25 @@
-from decimal import Decimal
+from decimal import *
 from loguru import logger
 from lib.db import session
 from sqlalchemy import func
 from lib.models.ohlcv import Ohlcv
 from datetime import datetime, timedelta
-from lib.models.trade import Trade, TradeType
+from lib.models.trade import TradeType
 from lib.broker import Broker
-from typing import TypedDict
+from typing import TypedDict, Optional
 
 
 class StrategyParams(TypedDict):
     ticker: str
-    ratio: Decimal
+    ratio: Optional[Decimal]
+
+    # 지정수량 매도
+    # ex) ticker='BTC', volume=Decimal("0.01")
+    volume: Optional[Decimal]
+
+    # 지정가 매수
+    # ex) ticker='BTC', amount=Decimal("10000.0")
+    amount: Optional[Decimal]
 
 
 class BaseStrategy:
@@ -29,8 +37,12 @@ class BaseStrategy:
         if not self.params["ticker"]:
             raise ValueError("ticker is required")
 
-        if not self.params["ratio"]:
-            raise ValueError("ratio is required")
+        if (
+            not self.params.get("ratio")
+            and not self.params.get("amount")
+            and not self.params.get("volume")
+        ):
+            raise ValueError("ratio or amount/volume is required")
 
         if not self.name:
             raise ValueError("name is required")
@@ -58,12 +70,60 @@ class BaseStrategy:
     def should_sell(self) -> bool:
         pass
 
+    def __buy(self, amount):
+        name = self.name
+        ticker = self.params["ticker"]
+        min_unit_krw = self.params["min_unit_krw"]
+
+        if amount < min_unit_krw:
+            logger.info("not enough cash")
+            return
+        order = self.broker.buy(ticker, amount=amount)
+        logger.info(f"order = {order}")
+
+        if order:
+            self.broker.notify_order(
+                order_id=order["uuid"],
+                strategy=name,
+            )
+
+    def __sell(self, volume):
+        ticker = self.params["ticker"]
+        name = self.name
+
+        order = self.broker.sell(ticker, amount=volume)
+        logger.info(f"order = {order}")
+
+        if order:
+            self.broker.notify_order(
+                order_id=order["uuid"],
+                strategy=name,
+            )
+
     def trade(self) -> None:
+        """매매
+
+        Args:
+            volume (Decimal): 지정 수량 매도
+            amount (Decimal): 지정 수량 매수
+        """
         try:
-            ratio = self.params["ratio"]
+            ratio = self.params.get("ratio")
             name = self.name
             ticker = self.params["ticker"]
-            min_unit_krw = self.params["min_unit_krw"]
+            volume = self.params.get("volume")
+            amount = self.params.get("amount")
+
+            if volume and amount:
+                raise Exception("can't specify both volume and amount")
+
+            if volume:
+                self.__sell(volume=volume)
+                return
+
+            if amount:
+                self.__buy(amount=amount)
+                return
 
             self.__check_feed_staleness()
 
@@ -79,28 +139,11 @@ class BaseStrategy:
             if (
                 trade_type == None or trade_type == TradeType.sell
             ) and self.should_buy():
-                if buy_amount < min_unit_krw:
-                    logger.info("not enough cash")
-                    return
-                order = self.broker.buy(ticker, amount=buy_amount)
-                logger.info(f"order = {order}")
-
-                if order:
-                    self.broker.notify_order(
-                        order_id=order["uuid"],
-                        strategy=name,
-                    )
+                self.__buy(amount=buy_amount)
                 return
 
             if trade_type == TradeType.buy and self.should_sell():
-                order = self.broker.sell(ticker, amount=total_volume)
-                logger.info(f"order = {order}")
-
-                if order:
-                    self.broker.notify_order(
-                        order_id=order["uuid"],
-                        strategy=name,
-                    )
+                self.__sell(volume=total_volume)
                 return
         except Exception as e:
             logger.error(e)

@@ -17,7 +17,7 @@ broker = Broker(api, order_queue)
 
 
 def test_get_order():
-    sell_order = api.get_order("06838560-c10e-448c-8ef4-eabd2ebbeac1")
+    sell_order = api.get_order("c7ea372d-32d3-438d-9264-d923d83f591a")
     # buy_order = api.get_order("714e432e-8ccb-4d90-bc31-d00644da47a6")
     print(json.dumps(sell_order, indent=2))
     # print(json.dumps(buy_order, indent=2))
@@ -77,12 +77,3 @@ def test_rsi_bb():
 def test_get_orders():
     res = api.get_orders(ticker=Ticker.라이트코인.value, state="done")
     print(res)
-
-
-@freeze_time("2021-02-14 06:01:00")
-def test_patch_datetime():
-    strategy = VolatilityBreakout(
-        broker,
-        StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2)),
-    )
-    strategy.trade()
