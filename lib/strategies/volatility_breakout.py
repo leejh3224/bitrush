@@ -7,7 +7,7 @@ class VolatilityBreakout(BaseStrategy):
     name = "volatility_breakout"
 
     # settings
-    k = Decimal(0.5)
+    k = Decimal(0.65)
     stop_loss_threshold = Decimal(0.1)
 
     def __init__(self, broker, params) -> None:
