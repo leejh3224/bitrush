@@ -37,7 +37,7 @@ class Turtle(bt.Strategy):
         # entry rule
         if not self.position and new_high_updated:
             if cash * self.p.unit > self.p.min_trade:
-                self.order_target_percent(target=self.p.ratio)
+                self.order_target_percent(target=self.p.unit)
 
         if self.position:
             position_value = position.price * position.size

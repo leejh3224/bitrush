@@ -44,7 +44,7 @@ def test_volatility_breakout():
 
 def test_stoch_rsi():
     strategy = StochRSI(
-        broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+        broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))
     )
     strategy.should_buy()
     strategy.should_sell()

@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+from backtest.strategies.DcBreakout import DcBreakout
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -33,13 +34,13 @@ strategies = {
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(RsiBollingerBands)
+cerebro.addstrategy(DcBreakout)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
 cerebro.broker.setcash(130_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="XRP")["2018-01-01":]
+data = get_ohlcv(ticker="XRP")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 
