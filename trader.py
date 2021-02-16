@@ -24,48 +24,48 @@ def main(event, context):
     strategies: list[BaseStrategy] = [
         StochRSI(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
         GoldenCross(
-            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))
         ),
         GoldenCross(
-            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))
+            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))
         ),
         VolatilityBreakout(
             broker,
             StrategyParams(
                 ticker=Ticker.비트코인.value,
-                ratio=Decimal(0.2),
+                ratio=Decimal(0.05),
             ),
         ),
         VolatilityBreakout(
             broker,
             StrategyParams(
                 ticker=Ticker.이더리움.value,
-                ratio=Decimal(0.2),
+                ratio=Decimal(0.05),
             ),
         ),
         VolatilityBreakout(
             broker,
             StrategyParams(
                 ticker=Ticker.이오스.value,
-                ratio=Decimal(0.05),
+                ratio=Decimal(0.03),
             ),
         ),
         VolatilityBreakout(
             broker,
             StrategyParams(
                 ticker=Ticker.라이트코인.value,
-                ratio=Decimal(0.05),
+                ratio=Decimal(0.03),
             ),
         ),
-        Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
-        Aroon(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
-        Aroon(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.2))),
-        RsiBB(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
-        RsiBB(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
-        RsiBB(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
-        RsiBB(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.2))),
-        RsiBB(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.05))),
-        RsiBB(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.05))),
+        Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))),
+        Aroon(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))),
+        Aroon(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.1))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.1))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.1))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.03))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))),
     ]
 
     for strategy in strategies:

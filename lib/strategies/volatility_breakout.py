@@ -10,6 +10,9 @@ class VolatilityBreakout(BaseStrategy):
     k = Decimal(0.65)
     stop_loss_threshold = Decimal(0.1)
 
+    now = datetime.now()
+    sell_period = datetime(now.year, now.month, now.day, 6, 0, 0)
+
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
         ticker = self.params["ticker"]
@@ -24,10 +27,7 @@ class VolatilityBreakout(BaseStrategy):
         return current_ohlcv["close"] > current_ohlcv["open"] + (range * self.k)
 
     def should_sell(self):
-        now = datetime.now()
-        sell_period = datetime(now.year, now.month, now.day, 6, 0, 0)
-
-        close_when = sell_period < now <= sell_period + timedelta(minutes=20)
+        close_when = self.sell_period < now <= self.sell_period + timedelta(minutes=20)
         stop_loss = False
 
         ticker = self.params["ticker"]
