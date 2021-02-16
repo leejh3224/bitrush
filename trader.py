@@ -23,6 +23,8 @@ def main(event, context):
     # todo: 즉시 매매 by trade id 구현
     strategies: list[BaseStrategy] = [
         StochRSI(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.2))),
+        StochRSI(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))),
+        StochRSI(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))),
         GoldenCross(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))
         ),

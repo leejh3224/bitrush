@@ -34,13 +34,13 @@ strategies = {
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(DcBreakout)
+cerebro.addstrategy(SRSI)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
 cerebro.broker.setcash(130_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="XRP")
+data = get_ohlcv(ticker="LTC")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 

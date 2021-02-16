@@ -8,9 +8,9 @@ class StochRSI(BaseStrategy):
     name = "stoch_rsi"
 
     # settings
-    period = 14
-    buy_threshold = 0.8
-    sell_threshold = 0.35
+    period = 30
+    buy_threshold = 0.7
+    sell_threshold = 0.3
 
     def __init__(self, broker: Broker, params: StrategyParams) -> None:
         super().__init__(broker, params)
@@ -24,7 +24,6 @@ class StochRSI(BaseStrategy):
         srsi = (rsi - minrsi) / (maxrsi - minrsi)
 
         feed["srsi"] = srsi
-        feed["srsi_ma"] = feed["srsi"].rolling(window=5).mean()
         prev_srsi = feed["srsi"].shift(1)
         feed["cross_up"] = (feed["srsi"] > self.buy_threshold) & (
             prev_srsi <= self.buy_threshold

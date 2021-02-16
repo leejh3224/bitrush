@@ -22,18 +22,20 @@ class CRSI(bt.Strategy):
 
 
 class SRSI(bt.Strategy):
-    params = (("ratio", 0.2),)
+    params = (("ratio", 0.95),)
 
     def __init__(self) -> None:
         super().__init__()
-        self.rsi = StochRSI(self.data, period=14)
+        self.rsi = StochRSI(self.data, period=30)
+
+        self.crossover = bt.indicators.CrossOver(self.rsi, bt.LineNum(0.7))
+        self.crossdown = bt.indicators.CrossDown(self.rsi, bt.LineNum(0.3))
 
     def next(self):
         position = self.getposition()
-        rsi = self.rsi[0]
 
-        if not position and rsi >= 0.8:
+        if not position and self.crossover[0]:
             self.order_target_percent(target=self.p.ratio)
 
-        if position and rsi <= 0.2:
+        if position and self.crossdown[0]:
             self.close()
