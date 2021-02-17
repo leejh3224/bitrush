@@ -7,6 +7,7 @@ from lib.strategies.stoch_rsi import StochRSI
 from lib.strategies.golden_cross import GoldenCross
 from lib.strategies.aroon import Aroon
 from lib.strategies.rsi_bb import RsiBB
+from lib.strategies.dc_breakout import DcBreakout
 from lib.broker import Broker
 from lib.upbit import Upbit
 from lib.strategies.base_strategy import BaseStrategy, StrategyParams
@@ -68,6 +69,19 @@ def main(event, context):
         RsiBB(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.1))),
         RsiBB(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.03))),
         RsiBB(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))),
+        DcBreakout(
+            broker, StrategyParams(ticker=Ticker.비트코인.value), ratio=Decimal(0.1)
+        ),
+        DcBreakout(
+            broker, StrategyParams(ticker=Ticker.이더리움.value), ratio=Decimal(0.05)
+        ),
+        DcBreakout(broker, StrategyParams(ticker=Ticker.리플.value), ratio=Decimal(0.05)),
+        DcBreakout(
+            broker, StrategyParams(ticker=Ticker.라이트코인.value), ratio=Decimal(0.03)
+        ),
+        DcBreakout(
+            broker, StrategyParams(ticker=Ticker.이오스.value), ratio=Decimal(0.03)
+        ),
     ]
 
     for strategy in strategies:
