@@ -16,8 +16,8 @@ class RsiBollingerBands(bt.Strategy):
         cash = self.broker.get_cash()
         position = self.getposition()
 
-        if not position and self.rsi[0] >= 0.7 and self.bb_crossup[0] == 1:
+        if not position and self.rsi >= 0.7 and self.bb_crossup == 1:
             if cash * self.p.ratio > self.p.min_trade:
                 self.order_target_percent(target=self.p.ratio)
-        elif position and self.rsi[0] <= 0.3:
+        elif position and self.rsi <= 0.3:
             self.close()

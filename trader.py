@@ -8,6 +8,7 @@ from lib.strategies.golden_cross import GoldenCross
 from lib.strategies.aroon import Aroon
 from lib.strategies.rsi_bb import RsiBB
 from lib.strategies.dc_breakout import DcBreakout
+from lib.strategies.cci import Cci
 from lib.broker import Broker
 from lib.upbit import Upbit
 from lib.strategies.base_strategy import BaseStrategy, StrategyParams
@@ -82,6 +83,9 @@ def main(event, context):
         DcBreakout(
             broker, StrategyParams(ticker=Ticker.이오스.value), ratio=Decimal(0.03)
         ),
+        Cci(broker, StrategyParams(ticker=Ticker.비트코인.value), ratio=Decimal(0.1)),
+        Cci(broker, StrategyParams(ticker=Ticker.이더리움.value), ratio=Decimal(0.1)),
+        Cci(broker, StrategyParams(ticker=Ticker.이오스.value), ratio=Decimal(0.03)),
     ]
 
     for strategy in strategies:

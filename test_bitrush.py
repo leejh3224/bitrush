@@ -6,6 +6,7 @@ from lib.strategies.golden_cross import GoldenCross
 from lib.strategies.aroon import Aroon
 from lib.strategies.rsi_bb import RsiBB
 from lib.strategies.dc_breakout import DcBreakout
+from lib.strategies.cci import Cci
 from lib.ticker import Ticker
 from lib.broker import Broker
 from lib.upbit import Upbit
@@ -84,5 +85,11 @@ def test_dc_breakout():
     strategy = DcBreakout(
         broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
     )
+    strategy.should_buy()
+    strategy.should_sell()
+
+
+def test_cci():
+    strategy = Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2)))
     strategy.should_buy()
     strategy.should_sell()

@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-from backtest.strategies.DcBreakout import DcBreakout
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,6 +13,8 @@ from backtest.strategies.RsiBollingerBands import RsiBollingerBands
 from backtest.commission import CommInfoFractional
 from backtest.strategies.BuyHold import BuyHold
 from backtest.strategies.Rsi2 import Rsi2
+from backtest.strategies.Cci import Cci
+from backtest.strategies.DcBreakout import DcBreakout
 from backtest.data import get_ohlcv
 
 import backtrader as bt
@@ -34,13 +35,13 @@ strategies = {
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(RsiBollingerBands)
+cerebro.addstrategy(Cci)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
 cerebro.broker.setcash(130_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="BTC")
+data = get_ohlcv(ticker="ETH")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 
