@@ -20,8 +20,6 @@ class Cci(BaseStrategy):
 
         feed["cci"] = cci
 
-        print(feed.tail(55))
-
         self.current_ohlcv = feed.iloc[-1]
 
     def should_buy(self) -> bool:
