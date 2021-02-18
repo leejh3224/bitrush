@@ -6,7 +6,9 @@ class RsiBB(BaseStrategy):
     name = "rsi_bollinger_bands"
 
     # settings
-    period = 14
+    period = 7
+    buy_threshold = 0.7
+    sell_threshold = 0.3
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
@@ -19,14 +21,21 @@ class RsiBB(BaseStrategy):
         minrsi = abstract.MIN(rsi, period=self.period)
         srsi = (rsi - minrsi) / (maxrsi - minrsi)
 
-        bb = abstract.BBANDS(feed, matype=MA_Type.T3, period=self.period)
-        bb_crossup = feed["close"] > bb["upperband"]
+        feed["srsi"] = srsi
 
-        self.current_srsi = srsi.iloc[-1]
-        self.current_bb_crossup = bb_crossup.iloc[-1]
+        bb = abstract.BBANDS(feed, matype=MA_Type.T3, period=self.period)
+        feed["bbh"] = bb["upperband"]
+        prev_close = feed["close"].shift(1)
+        prev_bbh = feed["bbh"].shift(1)
+        feed["bbh_cross_up"] = (feed["close"] > feed["bbh"]) & (prev_close <= prev_bbh)
+
+        self.current_ohlcv = feed.iloc[-1]
 
     def should_buy(self) -> bool:
-        return self.current_srsi >= 0.8 and self.current_bb_crossup
+        return (
+            self.current_ohlcv["srsi"] >= self.buy_threshold
+            and self.current_ohlcv["bbh_cross_up"]
+        )
 
     def should_sell(self) -> bool:
-        return self.current_srsi <= 0.3
+        return self.current_ohlcv["srsi"] <= self.sell_threshold

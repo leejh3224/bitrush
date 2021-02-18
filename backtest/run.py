@@ -34,7 +34,7 @@ strategies = {
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(DcBreakout)
+cerebro.addstrategy(RsiBollingerBands)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
 cerebro.broker.setcash(130_0000)
