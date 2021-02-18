@@ -12,24 +12,23 @@ class RsiBB(BaseStrategy):
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
-        ticker = self.params["ticker"]
 
-        feed = self.broker.get_feed(ticker)
-
-        rsi = abstract.RSI(feed, period=self.period)
+        rsi = abstract.RSI(self.feed, period=self.period)
         maxrsi = abstract.MAX(rsi, period=self.period)
         minrsi = abstract.MIN(rsi, period=self.period)
         srsi = (rsi - minrsi) / (maxrsi - minrsi)
 
-        feed["srsi"] = srsi
+        self.feed["srsi"] = srsi
 
-        bb = abstract.BBANDS(feed, matype=MA_Type.T3, period=self.period)
-        feed["bbh"] = bb["upperband"]
-        prev_close = feed["close"].shift(1)
-        prev_bbh = feed["bbh"].shift(1)
-        feed["bbh_cross_up"] = (feed["close"] > feed["bbh"]) & (prev_close <= prev_bbh)
+        bb = abstract.BBANDS(self.feed, matype=MA_Type.T3, period=self.period)
+        self.feed["bbh"] = bb["upperband"]
+        prev_close = self.feed["close"].shift(1)
+        prev_bbh = self.feed["bbh"].shift(1)
+        self.feed["bbh_cross_up"] = (self.feed["close"] > self.feed["bbh"]) & (
+            prev_close <= prev_bbh
+        )
 
-        self.current_ohlcv = feed.iloc[-1]
+        self.current_ohlcv = self.feed.iloc[-1]
 
     def should_buy(self) -> bool:
         return (

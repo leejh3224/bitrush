@@ -14,25 +14,22 @@ class StochRSI(BaseStrategy):
 
     def __init__(self, broker: Broker, params: StrategyParams) -> None:
         super().__init__(broker, params)
-        ticker = self.params["ticker"]
 
-        feed = self.broker.get_feed(ticker)
-
-        rsi = abstract.RSI(feed, period=self.period)
+        rsi = abstract.RSI(self.feed, period=self.period)
         maxrsi = abstract.MAX(rsi, period=self.period)
         minrsi = abstract.MIN(rsi, period=self.period)
         srsi = (rsi - minrsi) / (maxrsi - minrsi)
 
-        feed["srsi"] = srsi
-        prev_srsi = feed["srsi"].shift(1)
-        feed["cross_up"] = (feed["srsi"] > self.buy_threshold) & (
+        self.feed["srsi"] = srsi
+        prev_srsi = self.feed["srsi"].shift(1)
+        self.feed["cross_up"] = (self.feed["srsi"] > self.buy_threshold) & (
             prev_srsi <= self.buy_threshold
         )
-        feed["cross_down"] = (feed["srsi"] < self.sell_threshold) & (
+        self.feed["cross_down"] = (self.feed["srsi"] < self.sell_threshold) & (
             prev_srsi >= self.sell_threshold
         )
 
-        self.current_ohlcv = feed.iloc[-1]
+        self.current_ohlcv = self.feed.iloc[-1]
 
     def should_buy(self) -> bool:
         return self.current_ohlcv["cross_up"]

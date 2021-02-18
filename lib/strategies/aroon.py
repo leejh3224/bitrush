@@ -7,10 +7,7 @@ class Aroon(BaseStrategy):
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
-        ticker = self.params["ticker"]
-
-        feed = self.broker.get_feed(ticker)
-        aroon = abstract.AROONOSC(feed)
+        aroon = abstract.AROONOSC(self.feed)
 
         self.prev_aroon_val = aroon.iloc[-2]
         self.aroon_val = aroon.iloc[-1]

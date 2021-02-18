@@ -12,15 +12,13 @@ class Cci(BaseStrategy):
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
-        ticker = self.params["ticker"]
+        cci = abstract.CCI(
+            self.feed["high"], self.feed["low"], self.feed["close"], period=self.period
+        )
 
-        feed = self.broker.get_feed(ticker)
+        self.feed["cci"] = cci
 
-        cci = abstract.CCI(feed["high"], feed["low"], feed["close"], period=self.period)
-
-        feed["cci"] = cci
-
-        self.current_ohlcv = feed.iloc[-1]
+        self.current_ohlcv = self.feed.iloc[-1]
 
     def should_buy(self) -> bool:
         return self.current_ohlcv["cci"] >= self.high

@@ -30,8 +30,9 @@ class BaseStrategy:
             min_unit_krw=Decimal(5000),
             **params,
         )
-        self.broker: Broker = broker
         self.__check()
+        self.broker: Broker = broker
+        self.feed = self.broker.get_feed(self.params["ticker"])
 
     def __check(self) -> None:
         if not self.params["ticker"]:

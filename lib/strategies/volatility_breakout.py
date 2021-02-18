@@ -10,12 +10,6 @@ class VolatilityBreakout(BaseStrategy):
     k = Decimal(0.65)
     stop_loss_threshold = Decimal(0.1)
 
-    def __init__(self, broker, params) -> None:
-        super().__init__(broker, params)
-        ticker = self.params["ticker"]
-
-        self.feed = self.broker.get_feed(ticker)
-
     def should_buy(self):
         yesterday_ohlcv = self.feed.iloc[-2]
         current_ohlcv = self.feed.iloc[-1]
