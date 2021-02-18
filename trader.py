@@ -71,21 +71,21 @@ def main(event, context):
         RsiBB(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.03))),
         RsiBB(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))),
         DcBreakout(
-            broker, StrategyParams(ticker=Ticker.비트코인.value), ratio=Decimal(0.1)
+            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))
         ),
         DcBreakout(
-            broker, StrategyParams(ticker=Ticker.이더리움.value), ratio=Decimal(0.05)
+            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.05))
         ),
-        DcBreakout(broker, StrategyParams(ticker=Ticker.리플.value), ratio=Decimal(0.05)),
+        DcBreakout(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.05))),
         DcBreakout(
-            broker, StrategyParams(ticker=Ticker.라이트코인.value), ratio=Decimal(0.03)
+            broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.03))
         ),
         DcBreakout(
-            broker, StrategyParams(ticker=Ticker.이오스.value), ratio=Decimal(0.03)
+            broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))
         ),
-        Cci(broker, StrategyParams(ticker=Ticker.비트코인.value), ratio=Decimal(0.1)),
-        Cci(broker, StrategyParams(ticker=Ticker.이더리움.value), ratio=Decimal(0.1)),
-        Cci(broker, StrategyParams(ticker=Ticker.이오스.value), ratio=Decimal(0.03)),
+        Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))),
+        Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))),
+        Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))),
     ]
 
     for strategy in strategies:
