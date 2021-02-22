@@ -93,3 +93,10 @@ def test_cci():
     strategy = Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2)))
     strategy.should_buy()
     strategy.should_sell()
+
+
+def test_sell():
+    strategy = DcBreakout(
+        broker, StrategyParams(ticker=Ticker.리플.value, volume=Decimal("191.54160583"))
+    )
+    strategy.trade()

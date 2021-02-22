@@ -6,8 +6,8 @@ class DcBreakout(BaseStrategy):
     name = "dc_breakout"
 
     # settings
-    low_period = 5
-    high_period = 20
+    low_period = 2
+    high_period = 10
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
