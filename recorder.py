@@ -60,7 +60,7 @@ def main(event, context):
                     f"order_id = {uuid}, retry = {retry_count}, trade not completed"
                 )
 
-                if retry_count <= 3:
+                if int(retry_count) <= 3:
                     message = sqs.Message(order_queue_url, record["receiptHandle"])
                     message.change_visibility(VisibilityTimeout=60 * 10)
 
