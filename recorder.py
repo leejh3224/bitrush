@@ -9,6 +9,7 @@ from lib.models.trade import Trade, TradeType
 from lib.db import session
 from datetime import datetime
 from lib.sqs import sqs, order_queue_url
+from lib.utils import is_trade_completed
 
 api = Upbit()
 
@@ -24,9 +25,7 @@ def main(event, context):
         logger.info(f"order_id = {uuid}")
 
         if order:
-            trade_completed = (order["side"] == "ask" and order["state"] == "done") or (
-                order["side"] == "bid" and order["state"] == "cancel"
-            )
+            trade_completed = is_trade_completed(order)
             if trade_completed:
                 trades = []
                 for trade in order["trades"]:

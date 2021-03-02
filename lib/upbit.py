@@ -176,8 +176,8 @@ class Upbit:
             ticker (str): 주문 심볼
             state (str): 주문 상태
                 - wait (default) (체결 대기)
-                - done (매도 완료)
-                - cancel (매수 완료)
+                - done
+                - cancel
         """
         url = f"{self.base_url}/v1/orders"
         query = {"market": f"KRW-{ticker}", "state": state}
