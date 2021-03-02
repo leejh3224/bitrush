@@ -102,7 +102,11 @@ class Broker:
         )
         result = (
             session.query(Trade.type, func.sum(Trade.volume), func.avg(Trade.price))
-            .filter(Trade.date >= last_trade_date, Trade.ticker == ticker)
+            .filter(
+                Trade.date >= last_trade_date,
+                Trade.ticker == ticker,
+                Trade.strategy == strategy,
+            )
             .first()
         )
         return (
