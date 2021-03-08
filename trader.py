@@ -25,10 +25,10 @@ def main(event, context):
     # todo: 즉시 매매 by trade id 구현
     strategies: list[BaseStrategy] = [
         GoldenCross(
-            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))
+            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.15))
         ),
         GoldenCross(
-            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))
+            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.15))
         ),
         VolatilityBreakout(
             broker,
@@ -75,14 +75,14 @@ def main(event, context):
         ),
         DcBreakout(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.03))),
         DcBreakout(
-            broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.03))
+            broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.02))
         ),
         DcBreakout(
-            broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))
+            broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.02))
         ),
-        Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.1))),
-        Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.1))),
-        Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))),
+        Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.05))),
+        Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.05))),
+        Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.02))),
     ]
 
     for strategy in strategies:
