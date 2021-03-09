@@ -9,6 +9,7 @@ from lib.strategies.aroon import Aroon
 from lib.strategies.rsi_bb import RsiBB
 from lib.strategies.dc_breakout import DcBreakout
 from lib.strategies.cci import Cci
+from lib.strategies.kc_breakout import KcBreakout
 from lib.broker import Broker
 from lib.upbit import Upbit
 from lib.strategies.base_strategy import BaseStrategy, StrategyParams
@@ -83,6 +84,12 @@ def main(event, context):
         Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.05))),
         Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.05))),
         Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.02))),
+        KcBreakout(
+            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+        ),
+        KcBreakout(
+            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))
+        ),
     ]
 
     for strategy in strategies:

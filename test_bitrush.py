@@ -7,6 +7,7 @@ from lib.strategies.aroon import Aroon
 from lib.strategies.rsi_bb import RsiBB
 from lib.strategies.dc_breakout import DcBreakout
 from lib.strategies.cci import Cci
+from lib.strategies.kc_breakout import KcBreakout
 from lib.ticker import Ticker
 from lib.broker import Broker
 from lib.upbit import Upbit
@@ -35,10 +36,11 @@ def test_notify_order():
     )
 
 
+@freeze_time("2021-02-14 06:01:00")
 def test_volatility_breakout():
     strategy = VolatilityBreakout(
         broker,
-        StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2)),
+        StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.2)),
     )
     # strategy.should_buy()
     print(strategy.should_sell())
@@ -95,8 +97,16 @@ def test_cci():
     strategy.should_sell()
 
 
+def test_kc_breakout():
+    strategy = KcBreakout(
+        broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
+    )
+    strategy.should_buy()
+    strategy.should_sell()
+
+
 def test_sell():
-    strategy = DcBreakout(
-        broker, StrategyParams(ticker=Ticker.리플.value, volume=Decimal("191.54160583"))
+    strategy = VolatilityBreakout(
+        broker, StrategyParams(ticker=Ticker.라이트코인.value, volume=Decimal("0.48147368"))
     )
     strategy.trade()

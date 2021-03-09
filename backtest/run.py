@@ -15,6 +15,7 @@ from backtest.strategies.BuyHold import BuyHold
 from backtest.strategies.Rsi2 import Rsi2
 from backtest.strategies.Cci import Cci
 from backtest.strategies.DcBreakout import DcBreakout
+from backtest.strategies.KcBreakout import KcBreakout
 from backtest.data import get_ohlcv
 
 import backtrader as bt
@@ -35,13 +36,13 @@ strategies = {
 }
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(Cci)
+cerebro.addstrategy(KcBreakout)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
-cerebro.broker.setcash(130_0000)
+cerebro.broker.setcash(350_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="ETH")
+data = get_ohlcv(ticker="BTC")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 
