@@ -21,8 +21,6 @@ broker = Broker(api)
 
 
 def main(event, context):
-
-    # todo: 즉시 매매 by trade id 구현
     strategies: list[BaseStrategy] = [
         GoldenCross(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.25))

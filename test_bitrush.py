@@ -104,6 +104,7 @@ def test_kc_breakout():
     strategy.should_sell()
 
 
+# 특정 수량만큼 즉시 매도
 def test_sell():
     strategy = DcBreakout(
         broker, StrategyParams(ticker=Ticker.이더리움.value, volume=Decimal("0.02285347"))

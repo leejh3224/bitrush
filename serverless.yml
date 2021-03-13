@@ -41,7 +41,7 @@ functions:
       - schedule:
           rate: cron(10 15 * * ? *) # 24:15
           enabled: true
-  order_syncer:
+  order-syncer:
     description: 매수/매도 정보 디비 저장
     image:
       uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
