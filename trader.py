@@ -15,10 +15,9 @@ from lib.upbit import Upbit
 from lib.strategies.base_strategy import BaseStrategy, StrategyParams
 from decimal import *
 from lib.ticker import Ticker
-from lib.sqs import order_queue
 
 api = Upbit()
-broker = Broker(api, order_queue)
+broker = Broker(api)
 
 
 def main(event, context):

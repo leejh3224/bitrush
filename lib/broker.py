@@ -8,6 +8,7 @@ from datetime import datetime
 from lib.db import session
 from sqlalchemy import func
 from lib.models.trade import Trade, TradeType
+from lib.models.order import Order
 
 
 class LastTrade(NamedTuple):
@@ -26,10 +27,9 @@ class LastTrade(NamedTuple):
 
 
 class Broker:
-    def __init__(self, api, order_queue) -> None:
+    def __init__(self, api) -> None:
         super().__init__()
         self.api = api
-        self.order_queue = order_queue
         self.assets = self.api.get_balance()
 
     def __get_asset(self, ticker):
@@ -57,9 +57,9 @@ class Broker:
             order_id (str): 주문 uuid
             strategy (str): 전략
         """
-        self.order_queue.send_message(
-            MessageBody=json.dumps({"order_id": order_id, "strategy": strategy})
-        )
+        order = Order(exchange="upbit", data=dict(order_id, strategy))
+        session.add(order)
+        session.commit()
 
     def buy(self, ticker, amount=0):
         return self.api.buy(ticker, amount)

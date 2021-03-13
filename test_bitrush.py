@@ -12,11 +12,10 @@ from lib.ticker import Ticker
 from lib.broker import Broker
 from lib.upbit import Upbit
 import json
-from lib.sqs import order_queue
 from freezegun import freeze_time
 
 api = Upbit()
-broker = Broker(api, order_queue)
+broker = Broker(api)
 
 
 def test_get_order():
