@@ -78,7 +78,7 @@ def test_rsi_bb():
 
 
 def test_get_orders():
-    res = api.get_orders(ticker=Ticker.라이트코인.value, state="done")
+    res = api.get_orders(ticker=Ticker.이더리움.value, state="cancel")
     print(res)
 
 
