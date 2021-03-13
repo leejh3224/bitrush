@@ -28,12 +28,6 @@ def main(event, context):
         GoldenCross(
             broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.25))
         ),
-        GoldenCross(
-            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.25))
-        ),
-        GoldenCross(
-            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.25))
-        ),
         VolatilityBreakout(
             broker,
             StrategyParams(
@@ -87,12 +81,6 @@ def main(event, context):
         Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
         Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
         Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.05))),
-        KcBreakout(
-            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
-        ),
-        KcBreakout(
-            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))
-        ),
         KcBreakout(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
         ),
