@@ -14,13 +14,14 @@ api = Upbit()
 
 
 def main(event, context):
-    db_orders = session.query(Order.exchange, Order.data).all()
+    db_orders = session.query(Order.id, Order.exchange, Order.data).all()
 
     for db_order in db_orders:
         logger.info(f"order = {db_order}")
 
-        exchange = db_order[0]
-        data = db_order[1]
+        id = db_order[0]
+        exchange = db_order[1]
+        data = db_order[2]
 
         if exchange == "upbit":
             uuid = data["order_id"]
@@ -52,7 +53,7 @@ def main(event, context):
 
                     try:
                         session.add_all(trades)
-                        session.delete(db_order)
+                        Order.query.filter(Order.id == id).delete()
                         session.commit()
                     except:
                         session.rollback()
