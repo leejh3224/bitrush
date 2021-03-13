@@ -59,6 +59,8 @@ def main(event, context):
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.15))),
         Aroon(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.15))),
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.15))),
+        Aroon(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.1))),
+        Aroon(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.1))),
         RsiBB(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.3))),
         RsiBB(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
         RsiBB(broker, StrategyParams(ticker=Ticker.리플.value, ratio=Decimal(0.03))),
@@ -76,16 +78,28 @@ def main(event, context):
             broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.02))
         ),
         DcBreakout(
+            broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.05))
+        ),
+        DcBreakout(
             broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.02))
         ),
         Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
         Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
         Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.05))),
+        Cci(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.05))),
+        Cci(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.05))),
         KcBreakout(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
         ),
         KcBreakout(
             broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))
+        ),
+        KcBreakout(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.1))),
+        KcBreakout(
+            broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.1))
+        ),
+        KcBreakout(
+            broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.1))
         ),
     ]
 
