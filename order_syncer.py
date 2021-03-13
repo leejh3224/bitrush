@@ -14,7 +14,7 @@ api = Upbit()
 
 
 def main(event, context):
-    db_orders = session.query(Order.id, Order.exchange, Order.data).all()
+    db_orders = session.query(Order.id, Order.exchange, Order.data).limit(10).all()
 
     for db_order in db_orders:
         logger.info(f"order = {db_order}")
