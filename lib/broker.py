@@ -57,7 +57,7 @@ class Broker:
             order_id (str): 주문 uuid
             strategy (str): 전략
         """
-        order = Order(exchange="upbit", data=dict(order_id, strategy))
+        order = Order(exchange="upbit", data=dict(order_id=order_id, strategy=strategy))
         session.add(order)
         session.commit()
 

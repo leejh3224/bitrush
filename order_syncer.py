@@ -53,7 +53,7 @@ def main(event, context):
 
                     try:
                         session.add_all(trades)
-                        session.delete(Order(id))
+                        session.delete(Order(id=id))
                         session.commit()
                     except:
                         session.rollback()
