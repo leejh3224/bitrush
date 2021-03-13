@@ -105,7 +105,7 @@ def test_kc_breakout():
 
 
 def test_sell():
-    strategy = VolatilityBreakout(
-        broker, StrategyParams(ticker=Ticker.라이트코인.value, volume=Decimal("0.48147368"))
+    strategy = DcBreakout(
+        broker, StrategyParams(ticker=Ticker.이더리움.value, volume=Decimal("0.02285347"))
     )
     strategy.trade()
