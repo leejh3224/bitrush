@@ -49,5 +49,5 @@ functions:
         - "order_syncer.main"
     events:
       - schedule:
-          rate: rate(1 minutes)
+          rate: rate(1 minute)
           enabled: true
