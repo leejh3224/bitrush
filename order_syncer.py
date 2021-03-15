@@ -18,48 +18,48 @@ def main(event, context):
 
     logger.info(f"orders = {db_orders}")
 
-    for db_order in db_orders:
-        logger.info(f"order = {db_order}")
+    # for db_order in db_orders:
+    #     logger.info(f"order = {db_order}")
 
-        id = db_order[0]
-        exchange = db_order[1]
-        data = db_order[2]
+    #     id = db_order[0]
+    #     exchange = db_order[1]
+    #     data = db_order[2]
 
-        if exchange == "upbit":
-            uuid = data["order_id"]
-            strategy = data["strategy"]
+    #     if exchange == "upbit":
+    #         uuid = data["order_id"]
+    #         strategy = data["strategy"]
 
-            order = api.get_order(uuid)
+    #         order = api.get_order(uuid)
 
-            if order:
-                trade_completed = is_trade_completed(order)
-                if trade_completed:
-                    trades = []
-                    for trade in order["trades"]:
-                        _trade = Trade(
-                            id=f'upbit:{trade["uuid"]}',
-                            strategy=strategy,
-                            type=TradeType.buy
-                            if trade["side"] == "bid"
-                            else TradeType.sell,
-                            date=datetime.strptime(
-                                trade["created_at"], "%Y-%m-%dT%H:%M:%S+09:00"
-                            ),
-                            ticker=trade["market"].replace("KRW-", ""),
-                            price=trade["price"],
-                            volume=trade["volume"],
-                            amount=trade["funds"],
-                            raw_data=trade,
-                        )
-                        trades.append(_trade)
+    #         if order:
+    #             trade_completed = is_trade_completed(order)
+    #             if trade_completed:
+    #                 trades = []
+    #                 for trade in order["trades"]:
+    #                     _trade = Trade(
+    #                         id=f'upbit:{trade["uuid"]}',
+    #                         strategy=strategy,
+    #                         type=TradeType.buy
+    #                         if trade["side"] == "bid"
+    #                         else TradeType.sell,
+    #                         date=datetime.strptime(
+    #                             trade["created_at"], "%Y-%m-%dT%H:%M:%S+09:00"
+    #                         ),
+    #                         ticker=trade["market"].replace("KRW-", ""),
+    #                         price=trade["price"],
+    #                         volume=trade["volume"],
+    #                         amount=trade["funds"],
+    #                         raw_data=trade,
+    #                     )
+    #                     trades.append(_trade)
 
-                    try:
-                        session.add_all(trades)
-                        session.query(Order).filter(Order.id == id).delete()
-                        session.commit()
-                    except:
-                        session.rollback()
-                        raise
+    #                 try:
+    #                     session.add_all(trades)
+    #                     session.query(Order).filter(Order.id == id).delete()
+    #                     session.commit()
+    #                 except:
+    #                     session.rollback()
+    #                     raise
 
 
 if __name__ == "__main__":
