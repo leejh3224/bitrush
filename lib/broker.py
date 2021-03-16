@@ -5,7 +5,7 @@ import json
 from lib.models.ohlcv import Ohlcv
 import pandas as pd
 from datetime import datetime
-from lib.db import Session
+from lib.db import session_scope
 from sqlalchemy import func
 from lib.models.trade import Trade, TradeType
 from lib.models.order import Order
@@ -57,7 +57,7 @@ class Broker:
             order_id (str): 주문 uuid
             strategy (str): 전략
         """
-        with Session().session_scope() as session:
+        with session_scope() as session:
             order = Order(
                 exchange="upbit", data=dict(order_id=order_id, strategy=strategy)
             )
@@ -72,7 +72,7 @@ class Broker:
 
     def get_feed(self, ticker):
         """디비에 있는 어제까지의 데이터 + 현재 데이터"""
-        with Session().session_scope() as session:
+        with session_scope() as session:
             [json_result] = self.api.get_ohlcv_now(ticker)
             ohlcv = Ohlcv(
                 ticker=ticker,
@@ -100,7 +100,7 @@ class Broker:
             ticker (str): 마켓 심볼
             strategy (str): 전략
         """
-        with Session().session_scope() as session:
+        with session_scope() as session:
             last_trade_date = (
                 session.query(func.max(Trade.date))
                 .filter_by(ticker=ticker, strategy=strategy)

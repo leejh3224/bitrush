@@ -1,6 +1,6 @@
 from decimal import *
 from loguru import logger
-from lib.db import Session
+from lib.db import session_scope
 from sqlalchemy import func
 from lib.models.ohlcv import Ohlcv
 from datetime import datetime, timedelta
@@ -49,7 +49,7 @@ class BaseStrategy:
             raise ValueError("name is required")
 
     def __check_feed_staleness(self) -> None:
-        with Session().session_scope() as session:
+        with session_scope() as session:
             (max_date,) = (
                 session.query(func.max(Ohlcv.date))
                 .filter_by(ticker=self.params["ticker"])

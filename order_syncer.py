@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from lib.db import Session
+from lib.db import session_scope
 from lib.upbit import Upbit
 from lib.models.order import Order
 from lib.utils import is_trade_completed
@@ -14,7 +14,7 @@ api = Upbit()
 
 
 def main(event, context):
-    with Session().session_scope() as session:
+    with session_scope() as session:
         db_orders = session.query(Order.id, Order.exchange, Order.data).limit(10).all()
 
         logger.info(f"orders = {db_orders}")
@@ -54,13 +54,9 @@ def main(event, context):
                             )
                             trades.append(_trade)
 
-                        try:
-                            session.add_all(trades)
-                            session.query(Order).filter(Order.id == id).delete()
-                            session.commit()
-                        except:
-                            session.rollback()
-                            raise
+                        session.add_all(trades)
+                        session.query(Order).filter(Order.id == id).delete()
+                        session.commit()
 
 
 if __name__ == "__main__":
