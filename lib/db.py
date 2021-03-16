@@ -12,4 +12,3 @@ engine = db.create_engine(
     echo=sql_logging == "True",
 )
 Session = sessionmaker(bind=engine)
-session = Session()

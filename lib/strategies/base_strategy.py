@@ -1,6 +1,6 @@
 from decimal import *
 from loguru import logger
-from lib.db import session
+from lib.db import Session
 from sqlalchemy import func
 from lib.models.ohlcv import Ohlcv
 from datetime import datetime, timedelta
@@ -49,18 +49,19 @@ class BaseStrategy:
             raise ValueError("name is required")
 
     def __check_feed_staleness(self) -> None:
-        (max_date,) = (
-            session.query(func.max(Ohlcv.date))
-            .filter_by(ticker=self.params["ticker"])
-            .first()
-        )
+        with Session() as session:
+            (max_date,) = (
+                session.query(func.max(Ohlcv.date))
+                .filter_by(ticker=self.params["ticker"])
+                .first()
+            )
 
-        yesterday = datetime.today() - timedelta(days=1)
+            yesterday = datetime.today() - timedelta(days=1)
 
-        # Scanner가 동작하지 않아서 오늘 결과가 저장되지 않을 경우 수행 x
-        if max_date.date() < yesterday.date():
-            logger.info("record is stale, max date = {}", max_date)
-            return
+            # Scanner가 동작하지 않아서 오늘 결과가 저장되지 않을 경우 수행 x
+            if max_date.date() < yesterday.date():
+                logger.info("record is stale, max date = {}", max_date)
+                return
 
     # abstract properties
     name: str = None
