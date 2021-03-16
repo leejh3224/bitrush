@@ -49,7 +49,7 @@ class BaseStrategy:
             raise ValueError("name is required")
 
     def __check_feed_staleness(self) -> None:
-        with Session() as session:
+        with Session().session_scope() as session:
             (max_date,) = (
                 session.query(func.max(Ohlcv.date))
                 .filter_by(ticker=self.params["ticker"])

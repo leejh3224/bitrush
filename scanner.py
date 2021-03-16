@@ -19,7 +19,7 @@ def main(event: Dict[str, Any], context) -> None:
             - days (int): end를 포함한, 일봉 데이터를 저장할 기간
         context (dict): 람다 컨텍스트
     """
-    with Session() as session:
+    with Session().session_scope() as session:
         upbit = Upbit()
 
         yesterday = datetime.today() - timedelta(days=1)
