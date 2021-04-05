@@ -19,7 +19,7 @@ class VolatilityBreakout(BaseStrategy):
 
     def should_sell(self):
         now = datetime.now()
-        sell_period = datetime(now.year, now.month, now.day, 6, 0, 0)
+        sell_period = datetime(now.year, now.month, now.day, 9, 45, 0)
         close_when = sell_period < now <= sell_period + timedelta(minutes=20)
         stop_loss = False
 
