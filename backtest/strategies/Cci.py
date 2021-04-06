@@ -4,7 +4,7 @@ from backtrader import bt
 
 class Cci(bt.Strategy):
     params = (
-        ("ratio", 0.9),
+        ("ratio", 0.2),
         ("min_trade", 5000),
     )
 

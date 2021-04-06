@@ -28,6 +28,9 @@ def main(event, context):
         GoldenCross(
             broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.25))
         ),
+        GoldenCross(
+            broker, StrategyParams(ticker=Ticker.폴카닷.value, ratio=Decimal(0.05))
+        ),
         VolatilityBreakout(
             broker,
             StrategyParams(
@@ -56,6 +59,20 @@ def main(event, context):
                 ratio=Decimal(0.03),
             ),
         ),
+        VolatilityBreakout(
+            broker,
+            StrategyParams(
+                ticker=Ticker.스텔라루멘.value,
+                ratio=Decimal(0.03),
+            ),
+        ),
+        VolatilityBreakout(
+            broker,
+            StrategyParams(
+                ticker=Ticker.에이다.value,
+                ratio=Decimal(0.03),
+            ),
+        ),
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.15))),
         Aroon(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.15))),
         Aroon(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.15))),
@@ -67,6 +84,9 @@ def main(event, context):
         RsiBB(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.1))),
         RsiBB(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.03))),
         RsiBB(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.03))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.스텔라루멘.value, ratio=Decimal(0.1))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.체인링크.value, ratio=Decimal(0.05))),
+        RsiBB(broker, StrategyParams(ticker=Ticker.폴카닷.value, ratio=Decimal(0.05))),
         DcBreakout(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
         ),
@@ -83,11 +103,17 @@ def main(event, context):
         DcBreakout(
             broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.02))
         ),
+        DcBreakout(
+            broker, StrategyParams(ticker=Ticker.스텔라루멘.value, ratio=Decimal(0.1))
+        ),
+        DcBreakout(broker, StrategyParams(ticker=Ticker.에이다.value, ratio=Decimal(0.1))),
         Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))),
         Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.2))),
         Cci(broker, StrategyParams(ticker=Ticker.이오스.value, ratio=Decimal(0.05))),
         Cci(broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.05))),
         Cci(broker, StrategyParams(ticker=Ticker.비트코인캐시.value, ratio=Decimal(0.05))),
+        Cci(broker, StrategyParams(ticker=Ticker.스텔라루멘.value, ratio=Decimal(0.05))),
+        Cci(broker, StrategyParams(ticker=Ticker.에이다.value, ratio=Decimal(0.05))),
         KcBreakout(
             broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.2))
         ),
@@ -101,6 +127,8 @@ def main(event, context):
         KcBreakout(
             broker, StrategyParams(ticker=Ticker.라이트코인.value, ratio=Decimal(0.1))
         ),
+        KcBreakout(broker, StrategyParams(ticker=Ticker.에이다.value, ratio=Decimal(0.1))),
+        StochRSI(broker, StrategyParams(ticker=Ticker.폴카닷.value, ratio=Decimal(0.1))),
     ]
 
     for strategy in strategies:

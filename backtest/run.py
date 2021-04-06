@@ -33,16 +33,19 @@ strategies = {
     "kvo": Kvo,
     "aroon": Aroon,
     "rsi_bb": RsiBollingerBands,
+    "cci": Cci,
+    "dc_breakout": DcBreakout,
+    "kc_breakout": KcBreakout,
 }
 
 cerebro = bt.Cerebro()
 cerebro.addstrategy(KcBreakout)
 
 cerebro.broker = bt.brokers.BackBroker(slip_perc=0.02)
-cerebro.broker.setcash(350_0000)
+cerebro.broker.setcash(500_0000)
 cerebro.broker.addcommissioninfo(CommInfoFractional())
 
-data = get_ohlcv(ticker="BTC")
+data = get_ohlcv(ticker="LINK")
 feed = bt.feeds.PandasData(dataname=data)
 cerebro.adddata(feed)
 

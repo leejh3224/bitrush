@@ -3,7 +3,7 @@ from backtest.indicators.StochRSI import StochRSI
 
 
 class RsiBollingerBands(bt.Strategy):
-    params = (("ratio", 0.9), ("min_trade", 5000), ("period", 7))
+    params = (("ratio", 0.2), ("min_trade", 5000), ("period", 7))
 
     def __init__(self) -> None:
         super().__init__()
