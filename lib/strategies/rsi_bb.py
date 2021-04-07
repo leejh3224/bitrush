@@ -8,7 +8,7 @@ class RsiBB(BaseStrategy):
     # settings
     period = 7
     buy_threshold = 0.7
-    sell_threshold = 0.3
+    sell_threshold = 0.5
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)

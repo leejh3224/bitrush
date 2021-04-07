@@ -8,7 +8,7 @@ class Cci(BaseStrategy):
     # settings
     period = 7
     high = 100
-    low = 60
+    low = 75
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
