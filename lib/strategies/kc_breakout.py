@@ -7,8 +7,8 @@ class KcBreakout(BaseStrategy):
 
     # settings
     period = 45
-    n = 1.5
-    stop_n = 2
+    n = 1.8
+    stop_n = 2.5
 
     def __init__(self, broker, params) -> None:
         super().__init__(broker, params)
