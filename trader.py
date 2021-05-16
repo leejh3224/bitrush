@@ -54,12 +54,12 @@ def main(event, context):
         ),
         Cci(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.3))),
         Cci(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.3))),
-        KcBreakout(
-            broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.3))
-        ),
-        KcBreakout(
-            broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.3))
-        ),
+        # KcBreakout(
+        #     broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.3))
+        # ),
+        # KcBreakout(
+        #     broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.3))
+        # ),
         StochRSI(broker, StrategyParams(ticker=Ticker.비트코인.value, ratio=Decimal(0.3))),
         StochRSI(broker, StrategyParams(ticker=Ticker.이더리움.value, ratio=Decimal(0.3))),
     ]
