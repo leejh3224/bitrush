@@ -106,7 +106,14 @@ def test_kc_breakout():
 
 # 특정 수량만큼 즉시 매도
 def test_sell():
-    strategy = DcBreakout(
-        broker, StrategyParams(ticker=Ticker.이더리움.value, volume=Decimal("0.02285347"))
+    strategy = KcBreakout(
+        broker, StrategyParams(ticker=Ticker.이더리움.value, volume=Decimal("0.24660557"))
     )
     strategy.trade()
+
+
+def test_brocker_get_feed():
+    api = Upbit()
+    broker = Broker(api)
+    feed = broker.get_feed(Ticker.비트코인.va)
+    print(feed)

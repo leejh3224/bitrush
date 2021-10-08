@@ -85,7 +85,9 @@ class Broker:
                 low=Decimal(json_result["low_price"]),
                 close=Decimal(json_result["trade_price"]),
             )
-            ohlcvs = session.query(Ohlcv).filter_by(ticker=ticker).all() + [ohlcv]
+            ohlcvs = session.query(Ohlcv).filter_by(ticker=ticker).order_by(
+                Ohlcv.date.desc()
+            ).limit(1000).all() + [ohlcv]
 
             feed = pd.DataFrame(
                 [vars(s) for s in ohlcvs],
