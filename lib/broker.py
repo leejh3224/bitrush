@@ -1,3 +1,4 @@
+from lib.upbit import Upbit
 from typing import NamedTuple, Optional
 from lib.utils import find
 from decimal import *
@@ -29,7 +30,7 @@ class LastTrade(NamedTuple):
 class Broker:
     def __init__(self, api) -> None:
         super().__init__()
-        self.api = api
+        self.api: Upbit = api
         self.assets = self.api.get_balance()
 
     def __get_asset(self, ticker):
@@ -50,16 +51,22 @@ class Broker:
         asset = self.__get_asset(ticker)
         return Decimal(asset.get("avg_buy_price", 0)) if asset else 0
 
-    def notify_order(self, order_id, strategy):
+    def notify_order(self, order_id, strategy, credential_alias):
         """주문 체결 알림
 
         Args:
             order_id (str): 주문 uuid
             strategy (str): 전략
+            credential_alias (str): api key 별명
         """
         with session_scope() as session:
             order = Order(
-                exchange="upbit", data=dict(order_id=order_id, strategy=strategy)
+                exchange="upbit",
+                data=dict(
+                    order_id=order_id,
+                    strategy=strategy,
+                    credential_alias=credential_alias,
+                ),
             )
             session.add(order)
             session.commit()

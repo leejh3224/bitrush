@@ -80,13 +80,15 @@ class BaseStrategy:
         if amount < min_unit_krw:
             logger.info("not enough cash")
             return
+
         order = self.broker.buy(ticker, amount=amount)
-        logger.info(f"order = {order}")
+        credential_alias = self.broker.api.get_credential_alias()
+
+        logger.info(f"order = {order}, credential_alias = {credential_alias}")
 
         if order:
             self.broker.notify_order(
-                order_id=order["uuid"],
-                strategy=name,
+                order_id=order["uuid"], strategy=name, credential_alias=credential_alias
             )
 
     def __sell(self, volume):
@@ -94,20 +96,21 @@ class BaseStrategy:
         name = self.name
 
         order = self.broker.sell(ticker, amount=volume)
+        credential_alias = self.broker.api.get_credential_alias()
+
         logger.info(f"order = {order}")
 
         if order:
             self.broker.notify_order(
-                order_id=order["uuid"],
-                strategy=name,
+                order_id=order["uuid"], strategy=name, credential_alias=credential_alias
             )
 
     def trade(self) -> None:
         """매매
 
         Args:
-            volume (Decimal): 지정 수량 매도
-            amount (Decimal): 지정 수량 매수
+                volume (Decimal): 지정 수량 매도
+                amount (Decimal): 지정 수량 매수
         """
         try:
             ratio = self.params.get("ratio")

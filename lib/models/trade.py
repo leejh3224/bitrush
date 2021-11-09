@@ -20,3 +20,4 @@ class Trade(Base):
     volume = Column(Numeric(precision=19, scale=8))
     amount = Column(Numeric(precision=19, scale=8))
     raw_data = Column(JSON)
+    credential_alias = Column(String(100))
