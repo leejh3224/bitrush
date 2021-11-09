@@ -26,7 +26,7 @@ functions:
   trader:
     description: 매매
     image:
-      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:prod
+      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
     events:
       - schedule:
           rate: rate(4 minutes)
@@ -34,7 +34,7 @@ functions:
   scanner:
     description: 일봉 데이터 디비 저장
     image: 
-      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:prod
+      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
       command:
         - "scanner.main"
     events:
@@ -44,7 +44,7 @@ functions:
   order-syncer:
     description: 매수/매도 정보 디비 저장
     image:
-      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:prod
+      uri: 678967017970.dkr.ecr.ap-northeast-2.amazonaws.com/bitrush:latest
       command:
         - "order_syncer.main"
     events:
