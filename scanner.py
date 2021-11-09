@@ -8,22 +8,19 @@ from lib.models.ohlcv import Ohlcv
 from lib.ticker import Ticker
 from lib.upbit import Upbit
 from datetime import datetime, timedelta
-from lib.models.credential import Credential
 
 
 def main(event: Dict[str, Any], context) -> None:
-	"""명시된 ticker의 일봉 정보를 저장
+    """명시된 ticker의 일봉 정보를 저장
 
-	Args:
-		event (dict): 람다 이벤트
-			- end (str): yyyy-mm-dd 09:00:00 형식의 날짜
-			- days (int): end를 포함한, 일봉 데이터를 저장할 기간
-		context (dict): 람다 컨텍스트
-	"""
-	with session_scope() as session:
-		credential = session.query(Credential.access_key, Credential.secret_key, Credential.alias).filter_by(alias="gompro-prod").first()
-
-		upbit = Upbit(access_key=credential[0], secret_key=credential[1], credential_alias=credential[2])
+    Args:
+        event (dict): 람다 이벤트
+            - end (str): yyyy-mm-dd 09:00:00 형식의 날짜
+            - days (int): end를 포함한, 일봉 데이터를 저장할 기간
+        context (dict): 람다 컨텍스트
+    """
+    with session_scope() as session:
+        upbit = Upbit()
 
         yesterday = datetime.today() - timedelta(days=1)
         end = (

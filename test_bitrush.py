@@ -11,19 +11,10 @@ from lib.strategies.kc_breakout import KcBreakout
 from lib.ticker import Ticker
 from lib.broker import Broker
 from lib.upbit import Upbit
-from lib.models.credential import Credential
 import json
 from freezegun import freeze_time
-from lib.db import session_scope
 
-with open("./credential.json") as json_file:
-    credentials = json.load(json_file)
-
-api = Upbit(
-    access_key=credentials["accessKey"],
-    secret_key=credentials["secretKey"],
-    credential_alias=credentials["alias"],
-)
+api = Upbit()
 broker = Broker(api)
 
 
@@ -122,15 +113,7 @@ def test_sell():
 
 
 def test_brocker_get_feed():
-    feed = broker.get_feed(Ticker.비트코인.value)
+    api = Upbit()
+    broker = Broker(api)
+    feed = broker.get_feed(Ticker.비트코인.va)
     print(feed)
-
-
-def test_insert_credentials():
-    with session_scope() as session:
-        credential = (
-            session.query(Credential.access_key, Credential.secret_key)
-            .filter_by(alias="gompro-prod")
-            .first()
-        )
-        print(credential[0])

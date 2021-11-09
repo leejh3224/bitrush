@@ -28,5 +28,3 @@ __pycache__/
 
 # venv
 venv/
-
-credential.json

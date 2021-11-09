@@ -14,6 +14,8 @@ provider:
       - subnet-0aa6bb2f3eff54014
       - subnet-02aeb3691bd0f3ce0
   environment:
+    UPBIT_OPEN_API_ACCESS_KEY: ${ssm:/Prod/Bitrush/UpbitApiAccessKey~true}
+    UPBIT_OPEN_API_SECRET_KEY: ${ssm:/Prod/Bitrush/UpbitApiSecretKey~true}
     UPBIT_OPEN_API_SERVER_URL: ${ssm:/Prod/Bitrush/ApiURL}
     BITRUSH_BOT_ACCESS_TOKEN: ${ssm:/Prod/Bitrush/BitrushBotAccessToken~true}
     BITRUSH_BOT_CHAT_ID: ${ssm:/Prod/Bitrush/BitrushBotChatID~true}

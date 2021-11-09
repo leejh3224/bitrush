@@ -36,16 +36,10 @@ upbit_ratelimit = {
 
 
 class Upbit:
-    def __init__(self, access_key, secret_key, credential_alias) -> None:
+    def __init__(self) -> None:
         super().__init__()
-
-        if not access_key or not secret_key:
-            raise ValueError("access key or secret key is empty")
-
-        self.access_key = access_key
-        self.secret_key = secret_key
-        self.credential_alias = credential_alias
-
+        self.access_key = os.getenv("UPBIT_OPEN_API_ACCESS_KEY")
+        self.secret_key = os.getenv("UPBIT_OPEN_API_SECRET_KEY")
         self.base_url = os.getenv("UPBIT_OPEN_API_SERVER_URL")
 
         # always throw exception for non 200 response
@@ -103,7 +97,7 @@ class Upbit:
         """정해진 금액만큼 매수
 
         Args:
-                        amount (int): 주문 총액 (원)
+            amount (int): 주문 총액 (원)
         """
         url = f"{self.base_url}/v1/orders"
         query = {
@@ -130,7 +124,7 @@ class Upbit:
         """정해진 양만큼 매도
 
         Args:
-                        amount (int): 코인양 (코인)
+            amount (int): 코인양 (코인)
         """
         url = f"{self.base_url}/v1/orders"
         query = {
@@ -157,7 +151,7 @@ class Upbit:
         """개별 주문 정보 조회
 
         Args:
-                        uuid (str): 주문 uuid
+            uuid (str): 주문 uuid
         """
         url = f"{self.base_url}/v1/order"
         query = {"uuid": uuid}
@@ -179,11 +173,11 @@ class Upbit:
         """주문 목록 정보 조회
 
         Args:
-                        ticker (str): 주문 심볼
-                        state (str): 주문 상태
-                                                                        - wait (default) (체결 대기)
-                                                                        - done
-                                                                        - cancel
+            ticker (str): 주문 심볼
+            state (str): 주문 상태
+                - wait (default) (체결 대기)
+                - done
+                - cancel
         """
         url = f"{self.base_url}/v1/orders"
         query = {"market": f"KRW-{ticker}", "state": state}
@@ -197,6 +191,3 @@ class Upbit:
 
         res = self.session.get(url, params=query, headers=self.__get_headers(payload))
         return res.json()
-
-    def get_credential_alias(self):
-        return self.credential_alias
