@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class Ticker(Enum):
+    원화 = "KRW"
     비트코인 = "BTC"
     이더리움 = "ETH"
     비트코인캐시 = "BCH"

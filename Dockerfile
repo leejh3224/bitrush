@@ -35,4 +35,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt -t .
 COPY lib lib
 COPY *.py ./
 
-CMD ["trader.main"]
+CMD ["trader_app.main"]

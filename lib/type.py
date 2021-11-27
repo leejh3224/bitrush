@@ -1,0 +1,2 @@
+# common typings
+JsonString = str

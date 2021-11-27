@@ -1,29 +1,37 @@
-import sqlalchemy as db
-from sqlalchemy.orm import sessionmaker
-import os
+from os import environ
+
+import sqlalchemy
+from sqlalchemy.orm.session import Session
 from contextlib import contextmanager
+from sqlalchemy.ext.declarative import declarative_base
 
-sql_logging = os.getenv("SQL_LOGGING")
-connection_string = os.getenv("BITRUSH_CONNECTION_STRING")
+# sqlalchemy model base class
+Base = declarative_base()
 
-engine = db.create_engine(
-    connection_string,
-    pool_size=20,
-    convert_unicode=True,
-    echo=sql_logging == "True",
-)
-Session = sessionmaker(bind=engine)
+
+def get_session(connection_string=None, sql_logging=None) -> Session:
+    if not connection_string:
+        connection_string = environ.get("BITRUSH_CONNECTION_STRING")
+
+    if not sql_logging:
+        sql_logging = environ.get("SQL_LOGGING") == "True"
+
+    engine = sqlalchemy.create_engine(
+        connection_string,
+        pool_size=20,
+        echo=sql_logging,
+    )
+    return Session(bind=engine, expire_on_commit=False)
 
 
 @contextmanager
-def session_scope():
+def session_scope(sess: Session):
     """Provide a transactional scope around a series of operations."""
-    session = Session()
     try:
-        yield session
-        session.commit()
-    except:
-        session.rollback()
+        yield sess
+        sess.commit()
+    except Exception:
+        sess.rollback()
         raise
     finally:
-        session.close()
+        sess.close()
