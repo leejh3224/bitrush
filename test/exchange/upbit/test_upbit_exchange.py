@@ -17,7 +17,7 @@ def test_get_last_candle(upbit_exchange: UpbitExchange):
 
 def test_get_all_assets(upbit_exchange: UpbitExchange):
     assets = upbit_exchange.get_all_assets()
-    print(list(map(str, assets)))
+    print(assets)
 
 
 @pytest.mark.skip
@@ -28,7 +28,7 @@ def test_buy(upbit_exchange: UpbitExchange):
 
 @pytest.mark.skip
 def test_sell(upbit_exchange: UpbitExchange):
-    order = upbit_exchange.sell("ETH", Decimal("1.22811331"))
+    order = upbit_exchange.sell("BTC", Decimal("0.000144000"))
     print(order)
 
 

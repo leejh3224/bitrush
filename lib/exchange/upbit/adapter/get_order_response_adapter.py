@@ -1,17 +1,15 @@
-import json
 from decimal import Decimal
 from typing import Optional, Dict
 
 from lib.exchange.upbit.model.get_order_response import GetOrderResponse
 from lib.order.order import Order
 from lib.order.order_type import OrderType
-from lib.type import JsonString
 
 
 class GetOrderResponseAdapter(Order):
     response: GetOrderResponse
 
-    def __init__(self, response: GetOrderResponse):
+    def __init__(self, response: Dict):
         self.response = GetOrderResponse(**response)
 
     def get_id(self) -> str:

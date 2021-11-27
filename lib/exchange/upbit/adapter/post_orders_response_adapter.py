@@ -10,12 +10,18 @@ from lib.type import JsonString
 
 class PostOrdersResponseAdapter(Order):
     response: PostOrdersResponse
+    custom_order_id: str
 
-    def __init__(self, response: PostOrdersResponse):
+    def __init__(self, response: Dict, custom_order_id: str):
+        """
+        Args:
+            custom_order_id (str): custom order id to group each order items
+        """
         self.response = PostOrdersResponse(**response)
+        self.custom_order_id = custom_order_id
 
     def get_id(self) -> str:
-        return self.response.uuid
+        return self.custom_order_id
 
     def is_filled(self) -> bool:
         return self.response.state != "wait"

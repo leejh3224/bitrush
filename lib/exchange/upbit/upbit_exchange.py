@@ -21,11 +21,6 @@ from lib.exchange.upbit.adapter.get_order_response_adapter import GetOrderRespon
 from lib.exchange.upbit.adapter.get_ticker_response_adapter import GetTickerResponseAdapter
 from lib.exchange.upbit.adapter.post_orders_response_adapter import PostOrdersResponseAdapter
 from lib.exchange.upbit.model.error_response import ErrorResponse
-from lib.exchange.upbit.model.get_accounts_response import GetAccountsResponse
-from lib.exchange.upbit.model.get_candles_days_response import GetCandlesDaysResponse
-from lib.exchange.upbit.model.get_order_response import GetOrderResponse
-from lib.exchange.upbit.model.get_ticker_response import GetTickerResponse
-from lib.exchange.upbit.model.post_orders_response import PostOrdersResponse
 from lib.order.order import Order
 
 # https://docs.upbit.com/docs/user-request-guide
@@ -86,7 +81,7 @@ class UpbitExchange(Exchange):
         query = {
             "market": "KRW-" + ticker,
         }
-        res: List[GetCandlesDaysResponse] = self.client.get(url, params=query).json()
+        res: List[Dict] = self.client.get(url, params=query).json()
         return GetCandlesDaysResponseAdapter(res[0])
 
     @sleep_and_retry
@@ -97,7 +92,7 @@ class UpbitExchange(Exchange):
         query = {
             "markets": "KRW-" + ticker
         }
-        res: List[GetTickerResponse] = self.client.get(url, params=query).json()
+        res: List[Dict] = self.client.get(url, params=query).json()
         return GetTickerResponseAdapter(res[0])
 
     @sleep_and_retry
@@ -106,7 +101,7 @@ class UpbitExchange(Exchange):
     def get_all_assets(self) -> List[Asset]:
         url = f"{self.base_url}/v1/accounts"
         payload = {**self.__get_auth()}
-        res_list: List[GetAccountsResponse] = self.client.get(url, headers=self.__get_headers(payload)).json()
+        res_list: List[Dict] = self.client.get(url, headers=self.__get_headers(payload)).json()
         return [GetAccountsResponseAdapter(res) for res in res_list]
 
     @sleep_and_retry
@@ -134,12 +129,15 @@ class UpbitExchange(Exchange):
            "trades_count":0
         }
         """
+        custom_order_id = str(uuid.uuid4())
+
         url = f"{self.base_url}/v1/orders"
         query = {
             "market": f"KRW-{ticker}",
             "side": "bid",
             "price": amount,
-            "ord_type": "price"
+            "ord_type": "price",
+            "identifier": custom_order_id
         }
         query_string = urlencode(query).encode()
 
@@ -149,8 +147,8 @@ class UpbitExchange(Exchange):
             "query_hash_alg": "SHA512",
         }
 
-        res: PostOrdersResponse = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
-        return PostOrdersResponseAdapter(res)
+        res = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
+        return PostOrdersResponseAdapter(res, custom_order_id)
 
     @sleep_and_retry
     @limits(calls=ratelimit["exchange.order"]["per_minute"], period=60)
@@ -177,12 +175,15 @@ class UpbitExchange(Exchange):
            "trades_count":0
         }
         """
+        custom_order_id = str(uuid.uuid4())
+
         url = f"{self.base_url}/v1/orders"
         query = {
             "market": f"KRW-{ticker}",
             "side": "ask",
             "volume": volume,
-            "ord_type": "market"
+            "ord_type": "market",
+            "identifier": custom_order_id
         }
         query_string = urlencode(query).encode()
 
@@ -192,8 +193,8 @@ class UpbitExchange(Exchange):
             "query_hash_alg": "SHA512",
         }
 
-        res: PostOrdersResponse = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
-        return PostOrdersResponseAdapter(res)
+        res = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
+        return PostOrdersResponseAdapter(res, custom_order_id)
 
     @sleep_and_retry
     @limits(calls=ratelimit["exchange.order"]["per_minute"], period=60)
@@ -271,7 +272,7 @@ class UpbitExchange(Exchange):
         }
 
         try:
-            res: GetOrderResponse = self.client.get(url, params=query, headers=self.__get_headers(payload)).json()
+            res = self.client.get(url, params=query, headers=self.__get_headers(payload)).json()
             return GetOrderResponseAdapter(res)
         except requests.HTTPError as e:
             err: ErrorResponse = ErrorResponse.parse_raw(e.response.text)

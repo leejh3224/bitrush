@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import Dict
 
 from lib.asset.asset import Asset
 from lib.exchange.upbit.model.get_accounts_response import GetAccountsResponse
@@ -8,7 +9,7 @@ from lib.ticker import Ticker
 class GetAccountsResponseAdapter(Asset):
     response: GetAccountsResponse
 
-    def __init__(self, response: GetAccountsResponse):
+    def __init__(self, response: Dict):
         self.response = GetAccountsResponse(**response)
 
     def get_net_value(self) -> Decimal:

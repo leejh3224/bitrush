@@ -1,6 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
+from typing import Optional, Dict
 
 from lib.candle.candle import Candle
 from lib.exchange.upbit.model.get_ticker_response import GetTickerResponse
@@ -9,7 +9,7 @@ from lib.exchange.upbit.model.get_ticker_response import GetTickerResponse
 class GetTickerResponseAdapter(Candle):
     response: GetTickerResponse
 
-    def __init__(self, response: GetTickerResponse):
+    def __init__(self, response: Dict):
         self.response = GetTickerResponse(**response)
 
     def get_ticker(self) -> str:
