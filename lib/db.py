@@ -1,11 +1,14 @@
 from os import environ
 
 import sqlalchemy
+from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.orm.session import Session
 from contextlib import contextmanager
 from sqlalchemy.ext.declarative import declarative_base
 
 # sqlalchemy model base class
+from sqlalchemy.sql import Insert
+
 Base = declarative_base()
 
 
@@ -35,3 +38,12 @@ def session_scope(sess: Session):
         raise
     finally:
         sess.close()
+
+
+@compiles(Insert)
+def on_duplicate_key_update(insert, compiler, **kwargs):
+    sql = compiler.visit_insert(insert, **kwargs)
+    if "on_duplicate_key_update" in insert.kwargs:
+        compares = insert.kwargs["on_duplicate_key_update"]
+        return sql + " ON DUPLICATE KEY UPDATE " + ",".join([compare[0] + " = " + compare[1] for compare in compares.items()])
+    return sql

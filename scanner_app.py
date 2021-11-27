@@ -1,6 +1,9 @@
+from typing import List
+
 from dotenv import load_dotenv
 
 from lib.account.account_repository import AccountRepository
+from lib.candle.candle import Candle
 from lib.candle.candle_repository import CandleRepository
 from lib.exchange.upbit.upbit_exchange import UpbitExchange
 from lib.db import get_session
@@ -21,9 +24,12 @@ def main(event, context) -> None:
 
     tickers = ["BTC", "ETH"]
 
+    candles: List[Candle] = []
+
     for ticker in tickers:
-        candle = exchange.get_day_candle(ticker)
-        candle_repository.add_candle(candle)
+        candles.append(exchange.get_day_candle(ticker))
+
+    candle_repository.add_candles(candles)
 
 
 if __name__ == "__main__":

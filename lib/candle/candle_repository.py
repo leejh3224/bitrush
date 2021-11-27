@@ -1,9 +1,6 @@
 from typing import List
-
-from sqlalchemy.dialects.mysql import insert
-
 from lib.candle.candle import Candle
-from lib.candle.candle_entity import CandleEntity
+from lib.candle.candle_entity import CandleEntity, candle_table
 from lib.candle.candle_entity_adapter import CandleEntityAdapter
 from lib.db import session_scope
 from sqlalchemy.orm.session import Session
@@ -28,15 +25,17 @@ class CandleRepository:
 
         return [CandleEntityAdapter(candle) for candle in candles]
 
-    def add_candle(self, candle: Candle):
-        stmt = insert(CandleEntity).values(
-            ticker=candle.get_ticker(),
-            closed_at=candle.get_closed_at(),
-            open=candle.get_open_price(),
-            high=candle.get_high_price(),
-            low=candle.get_low_price(),
-            close=candle.get_close_price(),
-            volume=candle.get_volume()
-        ).on_duplicate_key_update(id=CandleEntity.id)  # ignore duplicate
-
-        self.session.execute(stmt)
+    def add_candles(self, candles: List[Candle]):
+        with session_scope(self.session) as db:
+            values = [
+                dict(
+                    ticker=candle.get_ticker(),
+                    closed_at=candle.get_closed_at(),
+                    open=candle.get_open_price(),
+                    high=candle.get_high_price(),
+                    low=candle.get_low_price(),
+                    close=candle.get_close_price(),
+                    volume=candle.get_volume()
+                ) for candle in candles
+            ]
+            db.execute(candle_table.insert(on_duplicate_key_update={"id": "candle.id"}), values)

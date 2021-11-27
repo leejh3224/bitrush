@@ -18,3 +18,6 @@ class CandleEntity(Base):
 
     def __repr__(self):
         return f"""CandleEntity(ticker={self.ticker}, closed_at={self.closed_at}, open={self.open}, high={self.high}, low={self.low}, close={self.close}, volume={self.volume})"""
+
+
+candle_table = CandleEntity.__table__
