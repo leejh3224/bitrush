@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 
 import pytest
@@ -5,9 +6,18 @@ import pytest
 from lib.exchange.upbit.upbit_exchange import UpbitExchange
 
 
-def test_get_day_candle(upbit_exchange: UpbitExchange):
-    candle = upbit_exchange.get_day_candle("BTC")
-    print(candle)
+def test_get_day_candles_candle_at_2021_11_27(upbit_exchange: UpbitExchange):
+    candles = upbit_exchange.get_day_candles("BTC", start="2021-11-27", end="2021-11-28")
+
+    assert candles[0].get_ticker() == "BTC"
+    assert len(candles) == 1
+
+
+def test_get_today_candle(upbit_exchange: UpbitExchange):
+    candle = upbit_exchange.get_today_candle("BTC")
+
+    assert candle.get_ticker() == "BTC"
+    assert candle.get_closed_at() == datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def test_get_last_candle(upbit_exchange: UpbitExchange):

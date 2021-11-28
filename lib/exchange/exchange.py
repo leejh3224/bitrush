@@ -15,7 +15,19 @@ class Exchange(metaclass=ABCMeta):
         self.account = account
 
     @abstractmethod
-    def get_day_candle(self, ticker: str) -> Candle:
+    def get_day_candles(self, ticker: str, start: str, end: str) -> List[Candle]:
+        """
+        get day candles between `start` and `end`
+
+        Args:
+            ticker (str): symbol for a ticker, ex) BTC
+            start (str): start date in format YYYY-MM-DD (inclusive)
+            end (str): end date in format YYYY-MM-DD (exclusive)
+        """
+        pass
+
+    @abstractmethod
+    def get_today_candle(self, ticker: str) -> Candle:
         pass
 
     @abstractmethod

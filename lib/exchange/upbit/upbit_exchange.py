@@ -1,5 +1,6 @@
 import hashlib
 import uuid
+from datetime import datetime
 from decimal import Decimal
 from typing import Dict, List, Optional
 from urllib.parse import urlencode
@@ -76,7 +77,22 @@ class UpbitExchange(Exchange):
     @sleep_and_retry
     @limits(calls=ratelimit["quotation"]["per_minute"], period=60)
     @limits(calls=ratelimit["quotation"]["per_second"], period=1)
-    def get_day_candle(self, ticker: str) -> Candle:
+    def get_day_candles(self, ticker: str, start: str, end: str) -> List[Candle]:
+        delta = datetime.fromisoformat(end) - datetime.fromisoformat(start)
+
+        url = f"{self.base_url}/v1/candles/days"
+        query = {
+            "market": "KRW-" + ticker,
+            "to": end + " 00:00:00",
+            "count": delta.days
+        }
+        res_list: List[Dict] = self.client.get(url, params=query).json()
+        return [GetCandlesDaysResponseAdapter(res) for res in res_list]
+
+    @sleep_and_retry
+    @limits(calls=ratelimit["quotation"]["per_minute"], period=60)
+    @limits(calls=ratelimit["quotation"]["per_second"], period=1)
+    def get_today_candle(self, ticker: str) -> Candle:
         url = f"{self.base_url}/v1/candles/days"
         query = {
             "market": "KRW-" + ticker,
