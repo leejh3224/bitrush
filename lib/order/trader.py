@@ -11,7 +11,7 @@ from lib.order.open_order_repository import OpenOrderRepository
 from lib.order.order_repository import OrderRepository
 from lib.order.order_type import OrderType
 from lib.strategy.base_strategy import BaseStrategy
-import logging as logger
+from loguru import logger
 
 
 class Trader:

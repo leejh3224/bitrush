@@ -8,8 +8,8 @@ from lib.candle.candle_repository import CandleRepository
 from lib.exchange.upbit.upbit_exchange import UpbitExchange
 from lib.db import get_session
 from lib.sentry import init_sentry
-import logging as logger
 from sentry_sdk import capture_exception
+from loguru import logger
 
 
 load_dotenv()

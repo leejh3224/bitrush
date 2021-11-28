@@ -7,7 +7,7 @@ from lib.order.open_order_repository import OpenOrderRepository
 from lib.order.order_repository import OrderRepository
 from lib.sentry import init_sentry
 from sentry_sdk import capture_exception
-import logging as logger
+from loguru import logger
 
 
 load_dotenv()
@@ -22,6 +22,8 @@ def main(event, context):
         account_repository = AccountRepository(session)
 
         accounts = account_repository.get_all_active_accounts()
+
+        logger.info(f"accounts = {accounts}")
 
         for account in accounts:
             exchange = UpbitExchange.build(account)

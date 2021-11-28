@@ -16,7 +16,7 @@ from lib.strategy.dc_breakout import DcBreakout
 from lib.strategy.rsi_bb import RsiBB
 from lib.strategy.stoch_rsi import StochRSI
 from sentry_sdk import capture_exception
-import logging as logger
+from loguru import logger
 
 
 load_dotenv()
@@ -51,6 +51,8 @@ def main(event, context):
             "BTC": [DcBreakout, Aroon, Cci, RsiBB, StochRSI],
             "ETH": [DcBreakout, Aroon, Cci, RsiBB, StochRSI]
         }
+
+        logger.info(f"accounts = {accounts}")
 
         for account in accounts:
             exchange = UpbitExchange.build(account)
