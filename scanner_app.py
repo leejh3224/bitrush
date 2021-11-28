@@ -22,7 +22,11 @@ def main(event, context) -> None:
         account_repository = AccountRepository(sess)
         candle_repository = CandleRepository(sess)
 
-        account = account_repository.get_account_by_alias(alias="gompro-prod")
+        alias = "sternwarret-prod"
+        account = account_repository.get_account_by_alias(alias)
+
+        if not account:
+            raise ValueError(f"cannot find account with alias = {alias}")
 
         exchange = UpbitExchange.build(account)
 
@@ -31,7 +35,7 @@ def main(event, context) -> None:
         candles: List[Candle] = []
 
         for ticker in tickers:
-            candles.append(exchange.get_day_candle(ticker))
+            candles.append(exchange.get_today_candle(ticker))
 
         logger.info(f"candles = {candles}")
         candle_repository.add_candles(candles)
