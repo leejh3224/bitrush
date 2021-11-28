@@ -123,10 +123,15 @@ class UpbitExchange(Exchange):
     @sleep_and_retry
     @limits(calls=ratelimit["exchange.order"]["per_minute"], period=60)
     @limits(calls=ratelimit["exchange.order"]["per_second"], period=1)
-    def buy(self, ticker: str, amount: Decimal) -> Order:
+    def buy(self, ticker: str, amount: Decimal) -> Optional[Order]:
         """
+        buy crypto
 
-        # example
+        Args:
+            ticker (str): symbol for a ticker, ex) BTC
+            amount (Decimal): price * unit, ex) price = 5000, unit = 1 => 5000
+
+        # example api response
         {
            "uuid":"cd947866-91bb-43bf-bd83-71b2580e2459",
            "side":"bid",
@@ -145,34 +150,20 @@ class UpbitExchange(Exchange):
            "trades_count":0
         }
         """
-        custom_order_id = str(uuid.uuid4())
-
-        url = f"{self.base_url}/v1/orders"
-        query = {
-            "market": f"KRW-{ticker}",
-            "side": "bid",
-            "price": amount,
-            "ord_type": "price",
-            "identifier": custom_order_id
-        }
-        query_string = urlencode(query).encode()
-
-        payload = {
-            **self.__get_auth(),
-            "query_hash": get_hash(query_string),
-            "query_hash_alg": "SHA512",
-        }
-
-        res = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
-        return PostOrdersResponseAdapter(res, custom_order_id)
+        return self.__order(ticker, amount=amount)
 
     @sleep_and_retry
     @limits(calls=ratelimit["exchange.order"]["per_minute"], period=60)
     @limits(calls=ratelimit["exchange.order"]["per_second"], period=1)
-    def sell(self, ticker: str, volume: Decimal) -> Order:
+    def sell(self, ticker: str, volume: Decimal) -> Optional[Order]:
         """
+        sell crypto
 
-        # example
+        Args:
+            ticker (str): symbol for a ticker, ex) BTC
+            volume (Decimal): volume to sell
+
+        # example api response
         {
            "uuid":"c06c0852-0138-42e5-883d-30a2569a4cc5",
            "side":"ask",
@@ -191,26 +182,7 @@ class UpbitExchange(Exchange):
            "trades_count":0
         }
         """
-        custom_order_id = str(uuid.uuid4())
-
-        url = f"{self.base_url}/v1/orders"
-        query = {
-            "market": f"KRW-{ticker}",
-            "side": "ask",
-            "volume": volume,
-            "ord_type": "market",
-            "identifier": custom_order_id
-        }
-        query_string = urlencode(query).encode()
-
-        payload = {
-            **self.__get_auth(),
-            "query_hash": get_hash(query_string),
-            "query_hash_alg": "SHA512",
-        }
-
-        res = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
-        return PostOrdersResponseAdapter(res, custom_order_id)
+        return self.__order(ticker, volume=volume)
 
     @sleep_and_retry
     @limits(calls=ratelimit["exchange.order"]["per_minute"], period=60)
@@ -295,6 +267,52 @@ class UpbitExchange(Exchange):
             status_code = e.response.status_code
 
             if status_code == 404 and err.error.name == "order_not_found":
+                return None
+            raise e
+
+    def __order(self, ticker: str, amount: Decimal = None, volume: Decimal = None) -> Optional[Order]:
+        if amount is None and volume is None:
+            raise ValueError("order amount or volume should not be None")
+
+        custom_order_id = str(uuid.uuid4())
+
+        url = f"{self.base_url}/v1/orders"
+        query = {
+            "market": f"KRW-{ticker}",
+            "identifier": custom_order_id
+        }
+
+        is_buying = amount is not None
+        is_selling = volume is not None
+
+        if is_buying:
+            query["side"] = "bid"
+            query["price"] = amount
+            query["ord_type"] = "price"
+
+        if is_selling:
+            query["side"] = "ask"
+            query["volume"] = volume
+            query["ord_type"] = "market"
+
+        query_string = urlencode(query).encode()
+
+        payload = {
+            **self.__get_auth(),
+            "query_hash": get_hash(query_string),
+            "query_hash_alg": "SHA512",
+        }
+
+        try:
+            res = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
+            return PostOrdersResponseAdapter(res, custom_order_id)
+        except requests.HTTPError as e:
+            err: ErrorResponse = ErrorResponse.parse_raw(e.response.text)
+            status_code = e.response.status_code
+
+            invalid_order_errors = ["invalid_volume_ask", "under_min_total_bid", "under_min_total_market_ask"]
+
+            if status_code == 400 and (err.error.name in invalid_order_errors):
                 return None
             raise e
 

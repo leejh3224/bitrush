@@ -1,8 +1,5 @@
 from datetime import datetime
 from decimal import Decimal
-
-import pytest
-
 from lib.exchange.upbit.upbit_exchange import UpbitExchange
 
 
@@ -30,16 +27,28 @@ def test_get_all_assets(upbit_exchange: UpbitExchange):
     print(assets)
 
 
-@pytest.mark.skip
 def test_buy(upbit_exchange: UpbitExchange):
-    order = upbit_exchange.buy("BTC", Decimal("5000"))
+    order = upbit_exchange.buy("BTC", Decimal("6000"))
+
+    assert order.get_id() != order.get_raw_data()["uuid"]
     print(order)
 
 
-@pytest.mark.skip
+def test_buy_less_than_min_required_amount(upbit_exchange: UpbitExchange):
+    order = upbit_exchange.buy("BTC", Decimal("0.1"))
+    assert order is None
+
+
 def test_sell(upbit_exchange: UpbitExchange):
-    order = upbit_exchange.sell("BTC", Decimal("0.000144000"))
+    order = upbit_exchange.sell("BTC", Decimal("0.00008660"))
+
+    assert order.get_id() != order.get_raw_data()["uuid"]
     print(order)
+
+
+def test_sell_less_than_min_required_amount(upbit_exchange: UpbitExchange):
+    order = upbit_exchange.sell("BTC", Decimal("0.000000010"))
+    assert order is None
 
 
 def test_get_order(upbit_exchange: UpbitExchange):

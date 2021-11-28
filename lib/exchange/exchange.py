@@ -39,11 +39,11 @@ class Exchange(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def buy(self, ticker: str, amount: Decimal) -> Order:
+    def buy(self, ticker: str, amount: Decimal) -> Optional[Order]:
         pass
 
     @abstractmethod
-    def sell(self, ticker: str, volume: Decimal) -> Order:
+    def sell(self, ticker: str, volume: Decimal) -> Optional[Order]:
         pass
 
     @abstractmethod
