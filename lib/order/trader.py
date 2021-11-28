@@ -11,6 +11,7 @@ from lib.order.open_order_repository import OpenOrderRepository
 from lib.order.order_repository import OrderRepository
 from lib.order.order_type import OrderType
 from lib.strategy.base_strategy import BaseStrategy
+import logging as logger
 
 
 class Trader:
@@ -50,6 +51,8 @@ class Trader:
         should_buy = (not last_order or last_order.get_order_type() == OrderType.SELL) and strategy.should_buy()
         should_sell = last_order and last_order.get_order_type() == OrderType.BUY and strategy.should_sell()
 
+        logger.info(f"last order = {last_order}, should buy = {should_buy}, should sell = {should_sell}")
+
         order = None
 
         if should_buy:
@@ -67,6 +70,8 @@ class Trader:
                     account_id=self.account.get_id()
                 )
             )
+
+            logger.info(f"order placed, order = {order}, data = {data}")
             self.on_trade_success(data)
 
     def get_position_size(self) -> Decimal:
