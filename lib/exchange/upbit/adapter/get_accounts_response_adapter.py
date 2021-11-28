@@ -3,7 +3,6 @@ from typing import Dict
 
 from lib.asset.asset import Asset
 from lib.exchange.upbit.model.get_accounts_response import GetAccountsResponse
-from lib.ticker import Ticker
 
 
 class GetAccountsResponseAdapter(Asset):
