@@ -48,7 +48,9 @@ class Trader:
             account_id=self.account.get_id()
         )
 
-        should_buy = (not last_order or last_order.get_order_type() == OrderType.SELL) and strategy.should_buy()
+        # TODO read from open_order as well to check if pending order exists
+
+        should_buy = (not last_order or last_order.get_order_type() == OrderType.SELL) and strategy.should_buy() and amount > Decimal("0")
         should_sell = last_order and last_order.get_order_type() == OrderType.BUY and strategy.should_sell()
 
         logger.info(f"last order = {last_order}, should buy = {should_buy}, should sell = {should_sell}")

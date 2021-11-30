@@ -49,3 +49,7 @@ class OpenOrderRepository:
             db.flush()
 
             return open_order.id
+
+    def get_last_open_order(self):
+        pass
+
