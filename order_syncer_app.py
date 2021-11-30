@@ -36,7 +36,7 @@ def main(event, context):
                 _id = open_order[0]
                 data = open_order[1]
 
-                order = exchange.get_order(order_id=_id)
+                order = exchange.get_order(order_id=data.order_id)
 
                 if not order or not order.is_filled():
                     continue
