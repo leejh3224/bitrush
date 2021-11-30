@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from lib.order.open_order_data import OpenOrderData
 from lib.order.trader import Trader
 
@@ -5,6 +7,8 @@ from lib.order.trader import Trader
 def test_get_position_size(trader: Trader):
     position_size = trader.get_position_size()
     print(position_size)
+
+    assert position_size != Decimal("0")
 
 
 def test_on_trade_success(trader: Trader, mock_open_order_data: OpenOrderData):

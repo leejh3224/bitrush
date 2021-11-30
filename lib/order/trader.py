@@ -77,7 +77,7 @@ class Trader:
     def get_position_size(self) -> Decimal:
         cash = self.asset_manager.get_cash()
         position_size = Decimal(math.floor(((self.asset_manager.get_account_size() * self.account_risk_ratio) / self.stoploss_ratio)))
-        return position_size if position_size > cash else Decimal("0")
+        return position_size if cash >= position_size else Decimal("0")
 
     def on_trade_success(self, data: OpenOrderData) -> None:
         self.open_order_repository.add_open_order(data)
