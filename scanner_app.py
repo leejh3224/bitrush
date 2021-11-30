@@ -37,7 +37,7 @@ def main(event, context) -> None:
         for ticker in tickers:
             candles.append(exchange.get_today_candle(ticker))
 
-        logger.error(f"candles = {candles}")
+        logger.info(f"candles = {candles}")
         candle_repository.add_candles(candles)
     except Exception as e:
         capture_exception(e)
