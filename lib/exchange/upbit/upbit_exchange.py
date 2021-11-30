@@ -9,7 +9,7 @@ import jwt
 import requests
 from ratelimit import sleep_and_retry, limits
 from requests import Session
-from loguru import logger
+import lib.logger as logger
 import json
 
 from lib.account.account import Account

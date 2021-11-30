@@ -16,7 +16,7 @@ from lib.strategy.dc_breakout import DcBreakout
 from lib.strategy.rsi_bb import RsiBB
 from lib.strategy.stoch_rsi import StochRSI
 from sentry_sdk import capture_exception
-from loguru import logger
+import lib.logger as logger
 
 
 load_dotenv()

@@ -7,7 +7,7 @@ from lib.order.open_order_repository import OpenOrderRepository
 from lib.order.order_repository import OrderRepository
 from lib.sentry import init_sentry
 from sentry_sdk import capture_exception
-from loguru import logger
+import lib.logger as logger
 
 
 load_dotenv()

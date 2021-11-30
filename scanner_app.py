@@ -9,7 +9,7 @@ from lib.exchange.upbit.upbit_exchange import UpbitExchange
 from lib.db import get_session
 from lib.sentry import init_sentry
 from sentry_sdk import capture_exception
-from loguru import logger
+import lib.logger as logger
 
 
 load_dotenv()
@@ -37,7 +37,7 @@ def main(event, context) -> None:
         for ticker in tickers:
             candles.append(exchange.get_today_candle(ticker))
 
-        logger.info(f"candles = {candles}")
+        logger.error(f"candles = {candles}")
         candle_repository.add_candles(candles)
     except Exception as e:
         capture_exception(e)
