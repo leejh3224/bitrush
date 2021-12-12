@@ -6,7 +6,7 @@ from botocore.config import Config
 from base64 import b64encode
 
 class Kms:
-    region = environ.get("AWS_REGION")
+    region = environ.get("DEFAULT_AWS_REGION")
     config = Config(region_name=region if region is not None else "ap-northeast-2")
     kms = boto3.client("kms", config=config)
     crypto_key_alias = "alias/crypto-key"

@@ -21,7 +21,7 @@ provider:
     SQL_LOGGING: False
     STAGE: prod
     DATA_ENC_KEY: ${ssm:/Prod/Bitrush/DataEncKey~true}
-    AWS_REGION: ap-northeast-2
+    DEFAULT_AWS_REGION: ap-northeast-2
 
 functions:
   trader:
