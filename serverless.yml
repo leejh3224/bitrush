@@ -20,6 +20,10 @@ provider:
     BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString~true}
     SQL_LOGGING: False
     STAGE: prod
+    DATA_ENC_KEY: ${ssm:/Prod/Bitrush/DataEncKey~true}
+    AWS_DEFAULT_REGION: ap-northeast-2
+    AWS_ACCESS_KEY_ID: ${ssm:/Prod/Bitrush/AwsAccessKey~true}
+    AWS_SECRET_ACCESS_KEY: ${ssm:/Prod/Bitrush/AwsSecretKey~true}
 
 functions:
   trader:
