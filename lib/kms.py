@@ -1,11 +1,14 @@
+from os import environ
 from typing import Tuple
 
 import boto3
+from botocore.config import Config
 from base64 import b64encode
 
-
 class Kms:
-    kms = boto3.client("kms")
+    region = environ.get("AWS_REGION")
+    config = Config(region_name=region if region is not None else "ap-northeast-2")
+    kms = boto3.client("kms", config=config)
     crypto_key_alias = "alias/crypto-key"
 
     def create_data_key(self) -> Tuple[bytes, bytes]:

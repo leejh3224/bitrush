@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 from os import path, environ
 from unittest.mock import Mock
 
+dotenv_path = path.join(pathlib.Path().resolve(), "test/.env.test")
+load_dotenv(dotenv_path=dotenv_path)
+
 import pytest
 from sqlalchemy.orm import Session
 
@@ -14,11 +17,6 @@ from lib.exchange.upbit.upbit_exchange import UpbitExchange
 from lib.kms import Kms
 from lib.order.order_repository import OrderRepository
 from lib.order.trader import Trader
-
-
-def pytest_sessionstart(session):
-    dotenv_path = path.join(pathlib.Path().resolve(), "test/.env.test")
-    load_dotenv(dotenv_path=dotenv_path)
 
 
 @pytest.fixture
