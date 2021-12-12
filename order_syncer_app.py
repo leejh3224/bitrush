@@ -1,50 +1,68 @@
-from dotenv import load_dotenv
+from os import environ
 
+from dotenv import load_dotenv
+load_dotenv()
+
+import traceback
 from lib.account.account_repository import AccountRepository
-from lib.db import get_session
+from lib.db import get_session, wait_for_db_init
 from lib.exchange.upbit.upbit_exchange import UpbitExchange
-from lib.order.open_order_repository import OpenOrderRepository
+from lib.kms import Kms
 from lib.order.order_repository import OrderRepository
 from lib.sentry import init_sentry
-from sentry_sdk import capture_exception
 import lib.logger as logger
 
 
-load_dotenv()
 init_sentry()
 
 
 def main(event, context):
     try:
+        kms = Kms()
         session = get_session()
-        open_order_repository = OpenOrderRepository(session)
+
+        if environ.get("STAGE") == "test":
+            wait_for_db_init(session)
+
         order_repository = OrderRepository(session)
-        account_repository = AccountRepository(session)
+        account_repository = AccountRepository(session, kms)
 
         accounts = account_repository.get_all_active_accounts()
 
         logger.info(f"accounts = {accounts}")
 
+        filled_order_ids = []
+
         for account in accounts:
             exchange = UpbitExchange.build(account)
 
-            open_orders = open_order_repository.get_open_orders(account_id=account.get_id(), count=20)
+            open_orders = order_repository.get_open_orders(account_id=account.get_id(), count=20)
 
-            logger.info(f"syncing open orders = {open_orders}")
+            logger.info(f"alias = {account.get_alias()}, syncing open orders = {open_orders}")
 
             for open_order in open_orders:
-                _id = open_order[0]
-                data = open_order[1]
+                order_data = exchange.get_order(order_id=open_order.get_id())
 
-                order = exchange.get_order(order_id=data.order_id)
-
-                if not order or not order.is_filled():
+                if not order_data or not order_data.is_filled():
                     continue
 
-                logger.info(f"adding order = {order}, data = {data}")
-                order_repository.add_order(order, data)
+                logger.info(f"updating order data = {order_data}")
+
+                order_repository.finish_order(id=open_order.get_id(), order=order_data)
+                filled_order_ids.append(open_order.get_id())
+
+        return {
+            "statusCode": 200,
+            "body": ",".join([order_id for order_id in filled_order_ids])
+        }
     except Exception as e:
-        capture_exception(e)
+        stack = traceback.format_exc()
+        logger.error(e)
+
+        return {
+            "statusCode": 500,
+            "body": stack
+        }
 
 
 if __name__ == "__main__":

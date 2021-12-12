@@ -16,8 +16,7 @@ class Exchange(metaclass=ABCMeta):
 
     @abstractmethod
     def get_day_candles(self, ticker: str, start: str, end: str) -> List[Candle]:
-        """
-        get day candles between `start` and `end`
+        """get day candles between `start` and `end`
 
         Args:
             ticker (str): symbol for a ticker, ex) BTC

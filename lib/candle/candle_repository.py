@@ -20,6 +20,7 @@ class CandleRepository:
             candles = db \
                 .query(CandleEntity) \
                 .filter_by(ticker=ticker) \
+                .order_by(CandleEntity.closed_at.desc()) \
                 .limit(count) \
                 .all()
 

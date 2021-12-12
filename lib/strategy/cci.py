@@ -13,10 +13,12 @@ class Cci(BaseStrategy):
 
     def __init__(self, feed: pd.DataFrame):
         super().__init__(feed)
-        cci = abstract.CCI(
-            self.feed["high"], self.feed["low"], self.feed["close"], period=self.period
-        )
-        self.feed["cci"] = cci
+
+        if self.has_enough_feed():
+            cci = abstract.CCI(
+                self.feed["high"], self.feed["low"], self.feed["close"], period=self.period
+            )
+            self.feed["cci"] = cci
 
     def get_name(self) -> str:
         return "cci"

@@ -23,6 +23,9 @@ class PostOrdersResponseAdapter(Order):
     def get_id(self) -> str:
         return self.custom_order_id
 
+    def get_exchange(self) -> str:
+        return "upbit"
+
     def is_filled(self) -> bool:
         return self.response.state != "wait"
 
@@ -32,11 +35,11 @@ class PostOrdersResponseAdapter(Order):
     def get_ticker(self) -> str:
         return self.response.market.replace("KRW-", "")
 
-    def get_volume(self) -> Optional[Decimal]:
-        return Decimal(self.response.volume) if self.response.volume else None
+    def get_volume(self) -> Decimal:
+        return Decimal(self.response.volume) if self.response.volume else Decimal("0")
 
-    def get_avg_price(self):
-        return Decimal(self.response.price) if self.response.price else None
+    def get_avg_price(self) -> Decimal:
+        return Decimal(self.response.price) if self.response.price else Decimal("0")
 
     def get_amount(self):
 

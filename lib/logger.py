@@ -1,13 +1,16 @@
-import logging as sentry_logger
+from os import environ
+
 from loguru import logger
+from sentry_sdk import capture_exception
 
 
 def info(msg: str):
     logger.info(msg)
 
 
-def error(msg: str):
-    logger.error(msg)
+def error(exception: Exception):
+    logger.exception(exception)
 
     # to trigger error alerts
-    sentry_logger.error(msg, exc_info=True, stack_info=True)
+    if environ.get("STAGE") == "prod":
+        capture_exception(exception)

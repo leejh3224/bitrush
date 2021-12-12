@@ -7,9 +7,7 @@ from lib.order.order_type import OrderType
 
 
 class OrderEntity(Base):
-
-    # TODO rename order2 to order
-    __tablename__ = "order2"
+    __tablename__ = "order"
 
     id = Column(String(36), primary_key=True)
     created_at = Column(DateTime, default=func.now())
@@ -22,3 +20,10 @@ class OrderEntity(Base):
     amount: Decimal = Column(Numeric(precision=19, scale=8))
     raw_data = Column(JSON)
     account_id = Column(BigInteger)
+
+    """
+    enum
+        - wait
+        - filled
+    """
+    status = Column(String(20))

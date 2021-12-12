@@ -3,7 +3,6 @@ from decimal import Decimal
 from typing import Optional, Dict
 
 from lib.order.order_type import OrderType
-from lib.type import JsonString
 
 
 class Order(metaclass=ABCMeta):
@@ -17,6 +16,10 @@ class Order(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def get_exchange(self) -> str:
+        pass
+
+    @abstractmethod
     def get_order_type(self) -> OrderType:
         pass
 
@@ -25,7 +28,7 @@ class Order(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_avg_price(self) -> Optional[Decimal]:
+    def get_avg_price(self) -> Decimal:
         pass
 
     @abstractmethod
@@ -33,12 +36,12 @@ class Order(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_volume(self) -> Optional[Decimal]:
+    def get_volume(self) -> Decimal:
         pass
 
     @abstractmethod
     def get_raw_data(self) -> Dict:
         pass
 
-    def __str__(self):
+    def __repr__(self):
         return f"""Order(id={self.get_id()}, ticker={self.get_ticker()}, is_filled={self.is_filled()}, order_type={self.get_order_type()}, avg_price={self.get_avg_price()}, amount={self.get_amount()}, volume={self.get_volume()}, raw_data={self.get_raw_data()})"""

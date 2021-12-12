@@ -26,6 +26,7 @@ __pycache__/
 
 # env
 .env
+.env.test
 
 # venv
 venv/

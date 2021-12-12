@@ -15,6 +15,9 @@ class GetOrderResponseAdapter(Order):
     def get_id(self) -> str:
         return self.response.uuid
 
+    def get_exchange(self) -> str:
+        return "upbit"
+
     def is_filled(self) -> bool:
         return self.response.state != "wait"
 
@@ -24,11 +27,11 @@ class GetOrderResponseAdapter(Order):
     def get_ticker(self) -> str:
         return self.response.market.replace("KRW-", "")
 
-    def get_volume(self) -> Optional[Decimal]:
+    def get_volume(self) -> Decimal:
         trades = self.response.trades
         return sum([Decimal(trade.volume) for trade in trades])
 
-    def get_avg_price(self) -> Optional[Decimal]:
+    def get_avg_price(self) -> Decimal:
         trades = self.response.trades
         sum_price = Decimal("0")
 

@@ -4,7 +4,6 @@ from typing import Optional, Dict
 from lib.order.order import Order
 from lib.order.order_entity import OrderEntity
 from lib.order.order_type import OrderType
-from lib.type import JsonString
 
 
 class OrderEntityAdapter(Order):
@@ -16,9 +15,11 @@ class OrderEntityAdapter(Order):
     def get_id(self) -> str:
         return self.order_entity.id
 
-    # only filled orders are store
+    def get_exchange(self) -> str:
+        return self.order_entity.exchange
+
     def is_filled(self) -> bool:
-        return True
+        return self.order_entity.status == "filled"
 
     def get_order_type(self) -> OrderType:
         return OrderType.BUY if self.order_entity.type == OrderType.BUY else OrderType.SELL
@@ -26,10 +27,10 @@ class OrderEntityAdapter(Order):
     def get_ticker(self) -> str:
         return self.order_entity.ticker
 
-    def get_volume(self) -> Optional[Decimal]:
+    def get_volume(self) -> Decimal:
         return self.order_entity.volume
 
-    def get_avg_price(self) -> Optional[Decimal]:
+    def get_avg_price(self) -> Decimal:
         return self.order_entity.avg_price
 
     def get_amount(self) -> Decimal:

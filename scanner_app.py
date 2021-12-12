@@ -1,47 +1,82 @@
-from typing import List
+import datetime
+from os import environ
 
 from dotenv import load_dotenv
+load_dotenv()
+
+from typing import List
+from datetime import date
 
 from lib.account.account_repository import AccountRepository
 from lib.candle.candle import Candle
 from lib.candle.candle_repository import CandleRepository
 from lib.exchange.upbit.upbit_exchange import UpbitExchange
-from lib.db import get_session
+from lib.db import get_session, wait_for_db_init
+from lib.kms import Kms
+from lib.order.trader import get_trading_tickers
 from lib.sentry import init_sentry
-from sentry_sdk import capture_exception
 import lib.logger as logger
+from lib.type import LambdaResponse
+import traceback
 
 
-load_dotenv()
 init_sentry()
 
 
-def main(event, context) -> None:
+def main(event, context) -> LambdaResponse:
     try:
-        sess = get_session()
-        account_repository = AccountRepository(sess)
-        candle_repository = CandleRepository(sess)
+        kms = Kms()
+        session = get_session()
 
-        alias = "sternwarret-prod"
-        account = account_repository.get_account_by_alias(alias)
+        if environ.get("STAGE") == "test":
+            wait_for_db_init(session)
 
-        if not account:
-            raise ValueError(f"cannot find account with alias = {alias}")
+        account_repository = AccountRepository(session, kms)
+        candle_repository = CandleRepository(session)
+
+        account = account_repository.get_active_account()
+
+        if account is None:
+            raise ValueError(f"active account doesn't exists")
 
         exchange = UpbitExchange.build(account)
 
-        tickers = ["BTC", "ETH"]
+        tickers = get_trading_tickers()
+
+        _start = event.get("start")
+        _end = event.get("end")
+
+        today = date.today()
+        tomorrow = today + datetime.timedelta(days=1)
+
+        start = _start if _start is not None else today.strftime("%Y-%m-%d")
+        end = _end if _end is not None else tomorrow.strftime("%Y-%m-%d")
 
         candles: List[Candle] = []
 
         for ticker in tickers:
-            candles.append(exchange.get_today_candle(ticker))
+            for candle_info in exchange.get_day_candles(ticker, start, end):
+                candles.append(candle_info)
 
-        logger.info(f"candles = {candles}")
         candle_repository.add_candles(candles)
+
+        return {
+            "statusCode": 200,
+            "body": len(candles)
+        }
     except Exception as e:
-        capture_exception(e)
+        stack = traceback.format_exc()
+        logger.error(e)
+
+        return {
+            "statusCode": 500,
+            "body": stack
+        }
 
 
 if __name__ == "__main__":
-    main({}, {})
+    event = {
+        "start": "2021-12-11",
+        "end": "2021-12-12"
+    }
+    main(event, {})

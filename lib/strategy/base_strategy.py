@@ -7,9 +7,6 @@ class BaseStrategy(metaclass=ABCMeta):
     feed: pd.DataFrame
 
     def __init__(self, feed: pd.DataFrame):
-        if len(feed) < 1000:
-            raise ValueError("not enough data in feed")
-
         self.feed = feed
 
     @abstractmethod
@@ -23,3 +20,6 @@ class BaseStrategy(metaclass=ABCMeta):
     @abstractmethod
     def should_sell(self) -> bool:
         pass
+
+    def has_enough_feed(self):
+        return len(self.feed) >= 1000

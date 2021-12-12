@@ -19,6 +19,7 @@ provider:
     BITRUSH_BOT_CHAT_ID: ${ssm:/Prod/Bitrush/BitrushBotChatID~true}
     BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString~true}
     SQL_LOGGING: False
+    STAGE: prod
 
 functions:
   trader:

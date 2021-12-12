@@ -1,0 +1,12 @@
+FROM python:3.8
+
+RUN mkdir /app
+
+WORKDIR /app
+
+RUN pip3 install -U pytest && \
+    pip3 install -U python-dotenv && \
+    pip3 install -U requests
+
+COPY test test
+COPY wait-for-it.sh .

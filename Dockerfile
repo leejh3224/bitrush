@@ -32,7 +32,13 @@ RUN rm -R ta-lib ta-lib-0.4.0-src.tar.gz
 COPY requirements.txt pyproject.toml ./
 RUN pip3 install --no-cache-dir -r requirements.txt -t .
 
+# always copy fresh source code
+ARG NO_CACHE_TIMESTAMP
+RUN echo $NO_CACHE_TIMESTAMP
+
 COPY lib lib
 COPY *.py ./
+
+COPY wait-for-it.sh .
 
 CMD ["trader_app.main"]

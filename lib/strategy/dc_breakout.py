@@ -13,21 +13,22 @@ class DcBreakout(BaseStrategy):
     def __init__(self, feed: pd.DataFrame):
         super().__init__(feed)
 
-        dch = abstract.MAX(self.feed["close"], timeperiod=self.high_period)
-        dcl = abstract.MIN(self.feed["close"], timeperiod=self.low_period)
+        if self.has_enough_feed():
+            dch = abstract.MAX(self.feed["close"], timeperiod=self.high_period)
+            dcl = abstract.MIN(self.feed["close"], timeperiod=self.low_period)
 
-        self.feed["dch"] = dch
-        self.feed["dcl"] = dcl
-        prev_close = self.feed["close"].shift(1)
-        prev_dch = self.feed["dch"].shift(1)
-        prev_dcl = self.feed["dcl"].shift(1)
+            self.feed["dch"] = dch
+            self.feed["dcl"] = dcl
+            prev_close = self.feed["close"].shift(1)
+            prev_dch = self.feed["dch"].shift(1)
+            prev_dcl = self.feed["dcl"].shift(1)
 
-        self.feed["cross_up"] = (self.feed["close"] >= self.feed["dch"]) & (
-                prev_close < prev_dch
-        )
-        self.feed["cross_down"] = (self.feed["close"] <= self.feed["dcl"]) & (
-                prev_close > prev_dcl
-        )
+            self.feed["cross_up"] = (self.feed["close"] >= self.feed["dch"]) & (
+                    prev_close < prev_dch
+            )
+            self.feed["cross_down"] = (self.feed["close"] <= self.feed["dcl"]) & (
+                    prev_close > prev_dcl
+            )
 
     def get_name(self) -> str:
         return "dc_breakout"

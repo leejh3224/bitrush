@@ -53,7 +53,7 @@ class UpbitExchange(Exchange):
         def on_error(r: requests.Response):
             if r.status_code >= 400:
                 logger.info(
-                    f"error\nurl={r.url}\ndata={json.dumps(r.json(), indent=2, ensure_ascii=False)}"
+                    f"[UpbitExchange] error\nurl={r.url}\ndata={json.dumps(r.json(), indent=2, ensure_ascii=False)}"
                 )
             r.raise_for_status()
 
@@ -250,7 +250,7 @@ class UpbitExchange(Exchange):
         }
         """
         url = f"{self.base_url}/v1/order"
-        query = {"uuid": order_id}
+        query = {"identifier": order_id}
         query_string = urlencode(query).encode()
 
         payload = {
@@ -261,6 +261,7 @@ class UpbitExchange(Exchange):
 
         try:
             res = self.client.get(url, params=query, headers=self.__get_headers(payload)).json()
+            logger.info(f"[UpbitExchange] get order response = {res}")
             return GetOrderResponseAdapter(res)
         except requests.HTTPError as e:
             err: ErrorResponse = ErrorResponse.parse_raw(e.response.text)
@@ -305,6 +306,7 @@ class UpbitExchange(Exchange):
 
         try:
             res = self.client.post(url, params=query, headers=self.__get_headers(payload)).json()
+            logger.info(f"[UpbitExchange] post order response = {res}")
             return PostOrdersResponseAdapter(res, custom_order_id)
         except requests.HTTPError as e:
             err: ErrorResponse = ErrorResponse.parse_raw(e.response.text)

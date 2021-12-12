@@ -1,0 +1,81 @@
+version: "3.9"
+services:
+  trader:
+    build:
+      context: .
+    env_file:
+      - test/.env.test
+    ports:
+      - "9000:8080"
+    depends_on:
+      - mysql
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    networks:
+      - backend
+  scanner:
+    build:
+      context: .
+    entrypoint: ["./wait-for-it.sh", "mysql:3306", "--", "/lambda-entrypoint.sh"]
+    command: ["scanner_app.main"]
+    env_file:
+      - test/.env.test
+    ports:
+      - "9001:8080"
+    depends_on:
+      - mysql
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    networks:
+      - backend
+  order_syncer:
+    build:
+      context: .
+    command: [ "order_syncer_app.main" ]
+    env_file:
+      - test/.env.test
+    ports:
+      - "9002:8080"
+    depends_on:
+      - mysql
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    networks:
+      - backend
+  e2e-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e-test
+    entrypoint: [
+        "./wait-for-it.sh", "scanner:8080", "--",
+        "./wait-for-it.sh", "trader:8080", "--",
+        "./wait-for-it.sh", "order_syncer:8080", "--",
+        "python3", "-m", "pytest", "-s", "-x", "test/e2e"
+    ]
+    env_file:
+      - test/.env.test
+    depends_on:
+      - trader
+      - order_syncer
+      - scanner
+    networks:
+      - backend
+  mysql:
+    restart: always
+    image: mysql:8.0.23
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: bitrush
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: bitrush
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+      - ./test/e2e/init/:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
