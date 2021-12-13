@@ -1,7 +1,4 @@
 import json
-from datetime import datetime
-
-import pytest
 import requests
 
 
@@ -16,7 +13,6 @@ def test_add_candles_today():
 
     assert status_code == 200, body
     assert body == 1, body
-
 
 def test_add_candles_between():
     start = "2021-12-08"

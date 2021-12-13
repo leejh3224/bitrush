@@ -55,7 +55,7 @@ class Trader:
         self.order_repository = order_repository
 
     def trade(self, ticker: str, strategy: BaseStrategy, position_size: Optional[str] = None) -> Optional[Order]:
-        amount = Decimal(position_size) or self.get_position_size()
+        amount = Decimal(position_size) if position_size else self.get_position_size()
 
         last_order = self.order_repository.get_last_order(
             ticker=ticker,

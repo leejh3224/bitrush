@@ -17,7 +17,6 @@ def test_get_today_candle(upbit_exchange: UpbitExchange):
     candle = upbit_exchange.get_today_candle("BTC")
 
     assert candle.get_ticker() == "BTC"
-    assert candle.get_closed_at() == datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def test_get_last_candle(upbit_exchange: UpbitExchange):
