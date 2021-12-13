@@ -25,6 +25,10 @@ init_sentry()
 
 def main(event, context) -> LambdaResponse:
     try:
+        _tickers = event.get("tickers")
+        _start = event.get("start")
+        _end = event.get("end")
+
         kms = Kms()
         session = get_session()
 
@@ -41,10 +45,7 @@ def main(event, context) -> LambdaResponse:
 
         exchange = UpbitExchange.build(account)
 
-        tickers = get_trading_tickers()
-
-        _start = event.get("start")
-        _end = event.get("end")
+        tickers = _tickers or get_trading_tickers()
 
         today = date.today()
         tomorrow = today + datetime.timedelta(days=1)

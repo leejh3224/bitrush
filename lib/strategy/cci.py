@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from talib import abstract
 
@@ -28,3 +29,6 @@ class Cci(BaseStrategy):
 
     def should_sell(self) -> bool:
         return self.feed.iloc[-1]["cci"] < self.low
+
+    def is_valid(self):
+        return not np.isnan(self.feed.iloc[-1]["cci"])

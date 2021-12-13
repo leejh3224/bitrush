@@ -1,3 +1,4 @@
+import json
 import time
 
 import pytest
@@ -11,7 +12,11 @@ def test_buy_and_sell():
     trader_url = f"http://trader:8080/{lambda_endpoint}"
 
     # buy
-    response = requests.post(trader_url, data="{}")
+    response = requests.post(trader_url, data=json.dumps({
+        "tickers": ["BTC"],
+        "position-size": "5500",
+        "strategy": "must_trade"
+    }))
     res = response.json()
 
     assert len(res["body"].split(",")) > 0, res["body"]
@@ -19,13 +24,17 @@ def test_buy_and_sell():
     time.sleep(3)
 
     # sync
-    response = requests.post(order_syncer_url, data="{}")
+    response = requests.post(order_syncer_url, data=json.dumps({ "account-alias": "gompro-local" }))
     res = response.json()
 
     assert len(res["body"].split(",")) > 0, res["body"]
 
     # sell
-    response = requests.post(trader_url, data="{}")
+    response = requests.post(trader_url, data=json.dumps({
+        "tickers": ["BTC"],
+        "position-size": "5500",
+        "strategy": "must_trade"
+    }))
     res = response.json()
 
     assert len(res["body"].split(",")) > 0, res["body"]
@@ -33,8 +42,7 @@ def test_buy_and_sell():
     time.sleep(3)
 
     # sync
-    response = requests.post(order_syncer_url, data="{}")
+    response = requests.post(order_syncer_url, data=json.dumps({ "account-alias": "gompro-local" }))
     res = response.json()
 
     assert len(res["body"].split(",")) > 0, res["body"]
-

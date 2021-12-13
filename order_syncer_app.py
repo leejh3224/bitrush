@@ -18,6 +18,8 @@ init_sentry()
 
 def main(event, context):
     try:
+        account_alias = event.get("account-alias")
+
         kms = Kms()
         session = get_session()
 
@@ -27,7 +29,7 @@ def main(event, context):
         order_repository = OrderRepository(session)
         account_repository = AccountRepository(session, kms)
 
-        accounts = account_repository.get_all_active_accounts()
+        accounts = account_repository.get_all_active_accounts(alias=account_alias)
 
         logger.info(f"accounts = {accounts}")
 

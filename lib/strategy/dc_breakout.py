@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from talib import abstract
 
@@ -38,3 +39,6 @@ class DcBreakout(BaseStrategy):
 
     def should_sell(self) -> bool:
         return self.feed.iloc[-1]["cross_down"]
+
+    def is_valid(self) -> bool:
+        return not np.isnan(self.feed.iloc[-1]["dch"]) and not np.isnan(self.feed.iloc[-1]["dcl"])

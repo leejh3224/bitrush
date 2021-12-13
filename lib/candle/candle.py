@@ -46,7 +46,7 @@ class Candle(metaclass=ABCMeta):
         ]
 
     def __repr__(self):
-        return f"""Candle(closed_at={self.get_closed_at()}, open={self.get_open_price()}, high={self.get_high_price()}, low={self.get_low_price()}, close={self.get_close_price()}, volume={self.get_volume()})"""
+        return f"""Candle(ticker={self.get_ticker()}, closed_at={self.get_closed_at()}, open={self.get_open_price()}, high={self.get_high_price()}, low={self.get_low_price()}, close={self.get_close_price()}, volume={self.get_volume()})"""
 
 
 def build_feed(candles: List[Candle]):

@@ -1,5 +1,4 @@
-from os import environ
-
+import numpy as np
 import pandas as pd
 from talib import abstract
 
@@ -24,11 +23,10 @@ class Aroon(BaseStrategy):
         return "aroon"
 
     def should_buy(self) -> bool:
-        if environ.get("STAGE") == "test":
-            return True
         return self.prev_aroon_val < self.buy_threshold <= self.aroon_val
 
     def should_sell(self) -> bool:
-        if environ.get("STAGE") == "test":
-            return True
         return self.prev_aroon_val >= self.sell_threshold > self.aroon_val
+
+    def is_valid(self):
+        return not np.isnan(self.prev_aroon_val) and not np.isnan(self.aroon_val)

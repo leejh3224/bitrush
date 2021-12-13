@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 
 from lib.asset.asset import Asset
@@ -10,15 +11,15 @@ class AssetManager:
     def __init__(self, exchange: Exchange):
         self.exchange = exchange
 
-    def get_cash(self):
+    def get_cash(self) -> Decimal:
         asset = self.get_asset("KRW")
         if asset:
             return asset.get_net_value()
-        return 0
+        return Decimal("0")
 
-    def get_account_size(self):
+    def get_account_size(self) -> Decimal:
         assets = self.exchange.get_all_assets()
-        total_value = 0
+        total_value = Decimal("0")
         for asset in assets:
             total_value += asset.get_net_value()
         return total_value

@@ -19,16 +19,20 @@ class AccountRepository:
         self.session = session
         self.kms = kms
 
-    def get_all_active_accounts(self) -> List[Account]:
+    def get_all_active_accounts(self, alias: Optional[str] = None) -> List[Account]:
         db: Session
         accounts: List[AccountEntity]
 
         with session_scope(self.session) as db:
             start_of_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
-            accounts = db.query(AccountEntity) \
+            query = db.query(AccountEntity) \
                 .filter(AccountEntity.enabled, AccountEntity.expired_at >= start_of_day) \
-                .all()
+
+            if alias:
+                query.filter(AccountEntity.alias == alias)
+
+            accounts = query.all()
 
         return [AccountEntityAdapter(self.__decrypt(account)) for account in accounts]
 

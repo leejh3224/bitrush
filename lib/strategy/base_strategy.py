@@ -21,5 +21,9 @@ class BaseStrategy(metaclass=ABCMeta):
     def should_sell(self) -> bool:
         pass
 
+    @abstractmethod
+    def is_valid(self) -> bool:
+        pass
+
     def has_enough_feed(self):
-        return len(self.feed) >= 1000
+        return len(self.feed) >= 50

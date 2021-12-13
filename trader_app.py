@@ -3,6 +3,8 @@ from os import environ
 from dotenv import load_dotenv
 load_dotenv()
 
+from lib.util import get_strategy_by_name
+
 import traceback
 from lib.account.account_repository import AccountRepository
 from lib.asset.asset_manager import AssetManager
@@ -22,6 +24,10 @@ init_sentry()
 
 def main(event, context):
     try:
+        _tickers = event.get("tickers")
+        _position_size = event.get("position-size")
+        _strategy = event.get("strategy")
+
         kms = Kms()
         session = get_session()
 
@@ -35,9 +41,11 @@ def main(event, context):
         accounts = account_repository.get_all_active_accounts()
         db_feed = DbFeed(exchange=UpbitExchange.build(accounts[0]), candle_repository=candle_repository)
 
-        tickers = get_trading_tickers()
+        tickers = _tickers or get_trading_tickers()
+        strategy = get_strategy_by_name(name=_strategy)
+
         feeds_by_ticker = db_feed.build_feeds_by_ticker(tickers=tickers)
-        strategies_by_ticker = get_trading_strategies_by_ticker(tickers=tickers)
+        strategies_by_ticker = get_trading_strategies_by_ticker(tickers=tickers, override_strategy=strategy)
 
         logger.info(f"accounts = {accounts}")
         orders = []
@@ -51,7 +59,7 @@ def main(event, context):
                 for strategy in strategies:
                     logger.info(f"trading with strategy = {strategy}, ticker = {ticker}")
 
-                    wait_order = trader.trade(ticker=ticker, strategy=strategy(feeds_by_ticker[ticker]))
+                    wait_order = trader.trade(ticker=ticker, strategy=strategy(feeds_by_ticker[ticker]), position_size=_position_size)
 
                     if wait_order is not None:
                         orders.append(wait_order)
