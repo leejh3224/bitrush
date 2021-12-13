@@ -10,7 +10,7 @@ on:
       - 'conftest.py'
       - 'LICENSE'
       - 'README.md'
-      - '**/test_*.py'
+      - 'test/**'
 
 jobs:
   deploy:
