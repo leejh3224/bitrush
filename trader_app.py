@@ -27,6 +27,7 @@ def main(event, context):
         _tickers = event.get("tickers")
         _position_size = event.get("position-size")
         _strategy = event.get("strategy")
+        account_alias = event.get("account-alias")
 
         kms = Kms()
         session = get_session()
@@ -38,7 +39,7 @@ def main(event, context):
         account_repository = AccountRepository(session, kms)
         order_repository = OrderRepository(session)
 
-        accounts = account_repository.get_all_active_accounts()
+        accounts = account_repository.get_all_active_accounts(alias=account_alias)
         db_feed = DbFeed(exchange=UpbitExchange.build(accounts[0]), candle_repository=candle_repository)
 
         tickers = _tickers or get_trading_tickers()
