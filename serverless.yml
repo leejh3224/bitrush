@@ -16,12 +16,12 @@ provider:
       - subnet-02aeb3691bd0f3ce0
   environment:
     UPBIT_OPEN_API_SERVER_URL: ${ssm:/Prod/Bitrush/ApiURL}
-    BITRUSH_BOT_ACCESS_TOKEN: ${ssm:/Prod/Bitrush/BitrushBotAccessToken~true}
-    BITRUSH_BOT_CHAT_ID: ${ssm:/Prod/Bitrush/BitrushBotChatID~true}
-    BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString~true}
+    BITRUSH_BOT_ACCESS_TOKEN: ${ssm:/Prod/Bitrush/BitrushBotAccessToken}
+    BITRUSH_BOT_CHAT_ID: ${ssm:/Prod/Bitrush/BitrushBotChatID}
+    BITRUSH_CONNECTION_STRING: ${ssm:/Prod/Bitrush/Db/Bitrush/ConnectionString}
     SQL_LOGGING: False
     STAGE: prod
-    DATA_ENC_KEY: ${ssm:/Prod/Bitrush/DataEncKey~true}
+    DATA_ENC_KEY: ${ssm:/Prod/Bitrush/DataEncKey}
     DEFAULT_AWS_REGION: ap-northeast-2
 
 functions:
