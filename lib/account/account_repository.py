@@ -69,6 +69,27 @@ class AccountRepository:
             )
             db.add(account)
 
+    def update_credential(self, id: int, access_key: str, secret_key: str, expired_at: datetime):
+        db: Session
+
+        data_key, plain_key = self.kms.create_data_key()
+        key = plain_key.decode("utf-8")
+
+        access_key_enc = aes.encrypt(plaintext=access_key, key=key)
+        secret_key_enc = aes.encrypt(plaintext=secret_key, key=key)
+
+        with session_scope(self.session) as db:
+            db.query(AccountEntity)\
+                .filter(AccountEntity.id == id)\
+                .update(
+                    dict(
+                        access_key=access_key_enc,
+                        secret_key=secret_key_enc,
+                        expired_at=expired_at,
+                        data_key=data_key
+                    )
+                )
+
     def __decrypt(self, account: AccountEntity):
         key = self.kms.decrypt_data_key(blob=account.data_key)
         account.access_key = aes.decrypt(cipher_text=account.access_key, key=key)

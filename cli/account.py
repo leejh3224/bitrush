@@ -21,3 +21,16 @@ def add(vendor: str, access_key: str, secret_key: str, expired_at: str, alias: s
         expired_at=datetime.fromisoformat(expired_at),
         alias=alias
     )
+
+@account_app.command()
+def update_credential(id: int, access_key: str, secret_key: str, expired_at: str):
+    session = get_session()
+    kms = Kms()
+    account_repository = AccountRepository(session, kms)
+
+    account_repository.update_credential(
+        id=id,
+        access_key=access_key,
+        secret_key=secret_key,
+        expired_at=datetime.fromisoformat(expired_at)
+    )
