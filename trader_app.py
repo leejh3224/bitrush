@@ -1,6 +1,10 @@
+from datetime import datetime
 from os import environ
 
 from dotenv import load_dotenv
+
+from lib.account.account import Account
+
 load_dotenv()
 
 from lib.util import get_strategy_by_name
@@ -17,9 +21,20 @@ from lib.order.order_repository import OrderRepository
 from lib.order.trader import Trader, get_trading_tickers, get_trading_strategies_by_ticker
 from lib.sentry import init_sentry
 import lib.logger as logger
+import lib.telegram_bot as telegram_bot
 
 
 init_sentry()
+
+
+def send_credential_expiry_reminder(account: Account):
+    reminder_days = [1, 7, 30]
+    time_delta = account.get_expired_at() - datetime.now()
+
+    for days in reminder_days:
+        if time_delta.days == days:
+            msg = f"credentials for account with id = {account.get_id()} will expire in {days} days"
+            telegram_bot.send_message(msg)
 
 
 def main(event, context):
@@ -52,6 +67,8 @@ def main(event, context):
         orders = []
 
         for account in accounts:
+            send_credential_expiry_reminder(account)
+
             exchange = UpbitExchange.build(account)
             asset_manager = AssetManager(exchange)
             trader = Trader(asset_manager, exchange, session, account, order_repository)

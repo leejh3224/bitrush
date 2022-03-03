@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from lib.account.account import Account
 from lib.account.account_entity import AccountEntity
 
@@ -19,3 +21,6 @@ class AccountEntityAdapter(Account):
 
     def get_alias(self) -> str:
         return self.account_entity.alias
+
+    def get_expired_at(self) -> datetime:
+        return self.account_entity.expired_at
