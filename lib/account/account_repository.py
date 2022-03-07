@@ -26,12 +26,17 @@ class AccountRepository:
         with session_scope(self.session) as db:
             start_of_day = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
-            query = db.query(AccountEntity) \
-                .filter(AccountEntity.enabled, AccountEntity.expired_at >= start_of_day) \
-                .filter(AccountEntity.vendor == "upbit")
+            filters = [
+                AccountEntity.enabled,
+                AccountEntity.expired_at >= start_of_day,
+                AccountEntity.vendor == "upbit"
+            ]
 
             if alias:
-                query.filter(AccountEntity.alias == alias)
+                filters.append(AccountEntity.alias == alias)
+
+            query = db.query(AccountEntity) \
+                .filter(*filters)
 
             accounts = query.all()
 
