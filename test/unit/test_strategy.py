@@ -5,16 +5,14 @@ from typing import List
 from lib.candle.candle import build_feed, Candle
 from lib.candle.candle_entity import CandleEntity
 from lib.candle.candle_entity_adapter import CandleEntityAdapter
-from lib.util import snake_to_camel, get_strategy_by_name, load_strategies
+from lib.strategy import strategies
 
 
 def test_strategy():
-    strategies = load_strategies()
     candles = get_candles()
 
-    for (name, module) in strategies:
-        Strategy = getattr(module, snake_to_camel(name))
-        strategy = Strategy(feed=build_feed(candles))
+    for (name, Clazz) in strategies:
+        strategy = Clazz(feed=build_feed(candles))
 
         assert strategy.get_name() != ""
         assert strategy.is_valid() == True

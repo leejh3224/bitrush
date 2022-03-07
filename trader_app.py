@@ -4,6 +4,7 @@ from os import environ
 from dotenv import load_dotenv
 
 from lib.account.account import Account
+from lib.asset.asset_manager import AssetManager
 
 load_dotenv()
 
@@ -11,7 +12,6 @@ from lib.util import get_strategy_by_name
 
 import traceback
 from lib.account.account_repository import AccountRepository
-from lib.asset.asset_manager import AssetManager
 from lib.candle.candle_repository import CandleRepository
 from lib.db import get_session, wait_for_db_init
 from lib.exchange.upbit.upbit_exchange import UpbitExchange

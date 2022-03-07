@@ -12,13 +12,9 @@ from lib.order.order_meta import OrderMeta
 from lib.order.order import Order
 from lib.order.order_repository import OrderRepository
 from lib.order.order_type import OrderType
-from lib.strategy.aroon import Aroon
 from lib.strategy.base_strategy import BaseStrategy
 import lib.logger as logger
-from lib.strategy.cci import Cci
-from lib.strategy.dc_breakout import DcBreakout
-from lib.strategy.rsi_bb import RsiBb
-from lib.strategy.stoch_rsi import StochRsi
+from lib.strategy import strategies as default_strategies
 
 
 def get_trading_tickers() -> List[str]:
@@ -27,8 +23,7 @@ def get_trading_tickers() -> List[str]:
 
 
 def get_trading_strategies_by_ticker(tickers: List[str], override_strategy: Optional[Type[BaseStrategy]] = None) -> Dict[str, List[Type[BaseStrategy]]]:
-    default_strategies = [DcBreakout, Aroon, Cci, RsiBb, StochRsi]
-    strategies = [override_strategy] if override_strategy is not None else default_strategies
+    strategies = [override_strategy] if override_strategy is not None else [clazz for (name, clazz) in default_strategies if name != "must_trade"]
     return { ticker: strategies for ticker in tickers }
 
 
