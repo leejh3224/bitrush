@@ -1,4 +1,3 @@
-from datetime import datetime
 from decimal import Decimal
 
 import pytest
@@ -11,12 +10,6 @@ def test_get_day_candles_candle_at_2021_11_27(upbit_exchange: UpbitExchange):
 
     assert candles[0].get_ticker() == "BTC"
     assert len(candles) == 1
-
-
-def test_get_today_candle(upbit_exchange: UpbitExchange):
-    candle = upbit_exchange.get_today_candle("BTC")
-
-    assert candle.get_ticker() == "BTC"
 
 
 def test_get_last_candle(upbit_exchange: UpbitExchange):
@@ -38,7 +31,7 @@ def test_buy(upbit_exchange: UpbitExchange):
 
 
 def test_buy_less_than_min_required_amount(upbit_exchange: UpbitExchange):
-    order = upbit_exchange.buy("BTC", Decimal("0.1"))
+    order = upbit_exchange.buy("BTC", Decimal("0"))
     assert order is None
 
 

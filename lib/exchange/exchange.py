@@ -2,17 +2,12 @@ from abc import *
 from decimal import *
 from typing import List, Optional
 
-from lib.account.account import Account
 from lib.asset.asset import Asset
 from lib.candle.candle import Candle
 from lib.order.order import Order
 
 
 class Exchange(metaclass=ABCMeta):
-    account: Account
-
-    def __init__(self, account: Account):
-        self.account = account
 
     @abstractmethod
     def get_day_candles(self, ticker: str, start: str, end: str) -> List[Candle]:
@@ -23,10 +18,6 @@ class Exchange(metaclass=ABCMeta):
             start (str): start date in format YYYY-MM-DD (inclusive)
             end (str): end date in format YYYY-MM-DD (exclusive)
         """
-        pass
-
-    @abstractmethod
-    def get_today_candle(self, ticker: str) -> Candle:
         pass
 
     @abstractmethod

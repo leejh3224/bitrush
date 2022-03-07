@@ -38,6 +38,7 @@ def get_hash(query_string):
     return m.hexdigest()
 
 
+# crypto
 class UpbitExchange(Exchange):
     client: Session
 
@@ -68,7 +69,7 @@ class UpbitExchange(Exchange):
         )
 
     def __init__(self, client: Session, account: Account):
-        super().__init__(account)
+        super().__init__()
         self.client = client
         self.access_key = account.get_access_key()
         self.secret_key = account.get_secret_key()
@@ -88,17 +89,6 @@ class UpbitExchange(Exchange):
         }
         res_list: List[Dict] = self.client.get(url, params=query).json()
         return [GetCandlesDaysResponseAdapter(res) for res in res_list]
-
-    @sleep_and_retry
-    @limits(calls=ratelimit["quotation"]["per_minute"], period=60)
-    @limits(calls=ratelimit["quotation"]["per_second"], period=1)
-    def get_today_candle(self, ticker: str) -> Candle:
-        url = f"{self.base_url}/v1/candles/days"
-        query = {
-            "market": "KRW-" + ticker,
-        }
-        res: List[Dict] = self.client.get(url, params=query).json()
-        return GetCandlesDaysResponseAdapter(res[0])
 
     @sleep_and_retry
     @limits(calls=ratelimit["quotation"]["per_minute"], period=60)
