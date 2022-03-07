@@ -1,6 +1,5 @@
 from abc import ABCMeta, abstractmethod
 from datetime import datetime
-from typing import Optional
 
 
 class Account(metaclass=ABCMeta):
