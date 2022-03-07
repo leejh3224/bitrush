@@ -28,7 +28,7 @@ class AccountRepository:
 
             query = db.query(AccountEntity) \
                 .filter(AccountEntity.enabled, AccountEntity.expired_at >= start_of_day) \
-                .filter(AccountEntity.vendor, "upbit")
+                .filter(AccountEntity.vendor == "upbit")
 
             if alias:
                 query.filter(AccountEntity.alias == alias)
