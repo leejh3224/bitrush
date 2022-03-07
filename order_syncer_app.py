@@ -29,7 +29,7 @@ def main(event, context):
         order_repository = OrderRepository(session)
         account_repository = AccountRepository(session, kms)
 
-        accounts = account_repository.get_all_active_accounts(alias=account_alias)
+        accounts = account_repository.get_all_active_upbit_accounts(alias=account_alias)
 
         logger.info(f"accounts = {accounts}")
 

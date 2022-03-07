@@ -19,7 +19,7 @@ class AccountRepository:
         self.session = session
         self.kms = kms
 
-    def get_all_active_accounts(self, alias: Optional[str] = None) -> List[Account]:
+    def get_all_active_upbit_accounts(self, alias: Optional[str] = None) -> List[Account]:
         db: Session
         accounts: List[AccountEntity]
 
@@ -28,6 +28,7 @@ class AccountRepository:
 
             query = db.query(AccountEntity) \
                 .filter(AccountEntity.enabled, AccountEntity.expired_at >= start_of_day) \
+                .filter(AccountEntity.vendor, "upbit")
 
             if alias:
                 query.filter(AccountEntity.alias == alias)
