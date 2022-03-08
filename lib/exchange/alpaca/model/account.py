@@ -2,7 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class GetAccountResponse(BaseModel):
+class Account(BaseModel):
     account_blocked: bool
     account_number: str
     accrued_fees: str

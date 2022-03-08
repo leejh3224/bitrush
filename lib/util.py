@@ -10,5 +10,5 @@ def get_strategy_by_name(name: str):
 def float_to_decimal(val: float, decimals: int = 8) -> Decimal:
     return Decimal(val).quantize(Decimal(f"1.{'0' * decimals}"))
 
-def decimal(val: Union[str, float], decimals: int = 8):
+def decimal(val: Union[str, float, Decimal], decimals: int = 8):
     return Decimal(round(Decimal(val), decimals))

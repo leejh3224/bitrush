@@ -32,9 +32,13 @@ class OrderAdapter(Order):
         return decimal(self.order.filled_avg_price) if self.order.status == "filled" else Decimal("0")
 
     def get_amount(self) -> Decimal:
-        return decimal(self.order.notional) if self.order.notional is not None else Decimal("0")
+        if self.order.status == "filled":
+            return decimal(self.get_avg_price() * self.get_volume())
+        return decimal(Decimal(self.order.notional) * self.get_volume()) if self.order.notional is not None else Decimal("0")
 
     def get_volume(self) -> Decimal:
+        if self.order.status == "filled":
+            return decimal(self.order.filled_qty)
         return decimal(self.order.qty) if self.order.qty is not None else Decimal("0")
 
     def get_raw_data(self) -> Dict:

@@ -6,8 +6,9 @@ from lib.account.account import Account
 from lib.asset.asset import Asset
 from lib.candle.candle import Candle
 from lib.exchange.alpaca.adapter.bar_adapter import BarAdapter
-from lib.exchange.alpaca.adapter.get_account_response_adapter import GetAccountResponseAdapter
+from lib.exchange.alpaca.adapter.account_adapter import AccountAdapter
 from lib.exchange.alpaca.adapter.order_adapter import OrderAdapter
+from lib.exchange.alpaca.adapter.position_adapter import PositionAdapter
 from lib.exchange.exchange import Exchange
 from lib.order.order import Order
 from lib.exchange.alpaca.model.order import Order as AlpacaOrder
@@ -51,8 +52,9 @@ class AlpacaExchange(Exchange):
 		account = self.client.get_account()
 		positions = self.client.list_positions()
 
-		cash = GetAccountResponseAdapter(account.__dict__.get('_raw'))
-		return [cash]
+		cash = AccountAdapter(account.__dict__.get('_raw'))
+		stocks = [PositionAdapter(position.__dict__.get('_raw')) for position in positions]
+		return [cash, *stocks]
 
 	def buy(self, ticker: str, amount: Decimal) -> Optional[Order]:
 		return self.__order(side="buy", ticker=ticker, amount=amount)
